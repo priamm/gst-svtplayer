@@ -161,7 +161,15 @@ typedef void* yyscan_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k.
+ * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
+ * Ditto for the __ia64__ case accordingly.
+ */
+#define YY_BUF_SIZE 32768
+#else
 #define YY_BUF_SIZE 16384
+#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -794,12 +802,12 @@ static yyconst flex_int16_t yy_chk[1354] =
 #define YY_RESTORE_YY_MORE_OFFSET
 #line 1 "parse.l"
 #line 2 "parse.l"
+#include "../gst_private.h"
+
 #include <math.h>
 #include <string.h>
 
 #include <glib/gprintf.h>
-
-#include "../gst_private.h"
 
 #include "types.h"
 #include "../gstinfo.h"
@@ -832,7 +840,7 @@ PRINT (const char *format, ...)
 /* links */
 
 #define YY_NO_INPUT 1
-#line 833 "lex._gst_parse_yy.c"
+#line 841 "lex._gst_parse_yy.c"
 
 #define INITIAL 0
 #define value 1
@@ -960,7 +968,12 @@ static int input (yyscan_t yyscanner );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k */
+#define YY_READ_BUF_SIZE 16384
+#else
 #define YY_READ_BUF_SIZE 8192
+#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -1067,7 +1080,7 @@ YY_DECL
 #line 71 "parse.l"
 
 
-#line 1068 "lex._gst_parse_yy.c"
+#line 1081 "lex._gst_parse_yy.c"
 
     yylval = yylval_param;
 
@@ -1264,7 +1277,7 @@ YY_RULE_SETUP
 #line 148 "parse.l"
 ECHO;
 	YY_BREAK
-#line 1265 "lex._gst_parse_yy.c"
+#line 1278 "lex._gst_parse_yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(value):
 	yyterminate();
@@ -1996,8 +2009,8 @@ YY_BUFFER_STATE _gst_parse_yy_scan_string (yyconst char * yystr , yyscan_t yysca
 
 /** Setup the input buffer state to scan the given bytes. The next call to _gst_parse_yylex() will
  * scan from a @e copy of @a bytes.
- * @param bytes the byte buffer to scan
- * @param len the number of bytes in the buffer pointed to by @a bytes.
+ * @param yybytes the byte buffer to scan
+ * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes.
  * @param yyscanner The scanner object.
  * @return the newly allocated buffer state object.
  */
@@ -2394,27 +2407,26 @@ void _gst_parse_yyfree (void * ptr , yyscan_t yyscanner)
 #line 148 "parse.l"
 
 
-/* A Bison parser, made by GNU Bison 2.3.  */
+
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
 /* Skeleton interface for Bison's Yacc-like parsers in C
-
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
-
-   This program is free software; you can redistribute it and/or modify
+   
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -2425,9 +2437,10 @@ void _gst_parse_yyfree (void * ptr , yyscan_t yyscanner)
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-
+   
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
+
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -2444,36 +2457,33 @@ void _gst_parse_yyfree (void * ptr , yyscan_t yyscanner)
      LINK = 264
    };
 #endif
-/* Tokens.  */
-#define PARSE_URL 258
-#define IDENTIFIER 259
-#define BINREF 260
-#define PADREF 261
-#define REF 262
-#define ASSIGNMENT 263
-#define LINK 264
-
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 533 "./grammar.y"
 {
+
+/* Line 1676 of yacc.c  */
+#line 623 "./grammar.y"
+
     gchar *s;
     chain_t *c;
     link_t *l;
     GstElement *e;
     GSList *p;
     graph_t *g;
-}
-/* Line 1489 of yacc.c.  */
-#line 76 "grammar.tab.h"
-	YYSTYPE;
+
+
+
+/* Line 1676 of yacc.c  */
+#line 72 "grammar.tab.h"
+} YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
 #endif
+
 
 
 

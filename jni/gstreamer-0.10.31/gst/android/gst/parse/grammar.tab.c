@@ -1,27 +1,26 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-/* A Bison parser, made by GNU Bison 2.3.  */
+
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
 /* Skeleton implementation for Bison's Yacc-like parsers in C
-
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
-
-   This program is free software; you can redistribute it and/or modify
+   
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -32,7 +31,7 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-
+   
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
@@ -50,7 +49,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.3"
+#define YYBISON_VERSION "2.4.1"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -58,48 +57,31 @@
 /* Pure parsers.  */
 #define YYPURE 1
 
+/* Push parsers.  */
+#define YYPUSH 0
+
+/* Pull parsers.  */
+#define YYPULL 1
+
 /* Using locations.  */
 #define YYLSP_NEEDED 0
 
 /* Substitute the variable and function names.  */
-#define yyparse _gst_parse_yyparse
-#define yylex   _gst_parse_yylex
-#define yyerror _gst_parse_yyerror
-#define yylval  _gst_parse_yylval
-#define yychar  _gst_parse_yychar
-#define yydebug _gst_parse_yydebug
-#define yynerrs _gst_parse_yynerrs
-
-
-/* Tokens.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     PARSE_URL = 258,
-     IDENTIFIER = 259,
-     BINREF = 260,
-     PADREF = 261,
-     REF = 262,
-     ASSIGNMENT = 263,
-     LINK = 264
-   };
-#endif
-/* Tokens.  */
-#define PARSE_URL 258
-#define IDENTIFIER 259
-#define BINREF 260
-#define PADREF 261
-#define REF 262
-#define ASSIGNMENT 263
-#define LINK 264
-
-
+#define yyparse         _gst_parse_yyparse
+#define yylex           _gst_parse_yylex
+#define yyerror         _gst_parse_yyerror
+#define yylval          _gst_parse_yylval
+#define yychar          _gst_parse_yychar
+#define yydebug         _gst_parse_yydebug
+#define yynerrs         _gst_parse_yynerrs
 
 
 /* Copy the first part of user declarations.  */
+
+/* Line 189 of yacc.c  */
 #line 1 "./grammar.y"
+
+#include "../gst_private.h"
 
 #include <glib-object.h>
 #include <glib.h>
@@ -107,7 +89,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../gst_private.h"
 #include "../gst-i18n-lib.h"
 
 #include "../gstconfig.h"
@@ -129,6 +110,12 @@
 #define YYERROR_VERBOSE 1
 #define YYLEX_PARAM scanner
 
+#define YYENABLE_NLS 0
+
+#ifndef YYLTYPE_IS_TRIVIAL
+#define YYLTYPE_IS_TRIVIAL 0
+#endif
+
 typedef void* yyscan_t;
 
 int _gst_parse_yylex (void * yylval_param , yyscan_t yyscanner);
@@ -137,7 +124,6 @@ int _gst_parse_yylex_destroy (yyscan_t scanner);
 struct yy_buffer_state * _gst_parse_yy_scan_string (char* , yyscan_t);
 void _gst_parse_yypush_buffer_state (void * new_buffer ,yyscan_t yyscanner );
 void _gst_parse_yypop_buffer_state (yyscan_t yyscanner );
-
 
 #ifdef __GST_PARSE_TRACE
 static guint __strings;
@@ -166,7 +152,7 @@ link_t *__gst_parse_link_new ()
 {
   link_t *ret;
   __links++;
-  ret = g_new0 (link_t, 1);
+  ret = g_slice_new0 (link_t);
   /* g_print ("ALLOCATED LINK  (%3u): %p\n", __links, ret); */
   return ret;
 }
@@ -175,7 +161,7 @@ __gst_parse_link_free (link_t *data)
 {
   if (data) {
     /* g_print ("FREEING LINK    (%3u): %p\n", __links - 1, data); */
-    g_free (data);
+    g_slice_free (link_t, data);
     g_return_if_fail (__links > 0);
     __links--;
   }
@@ -185,7 +171,7 @@ __gst_parse_chain_new ()
 {
   chain_t *ret;
   __chains++;
-  ret = g_new0 (chain_t, 1);
+  ret = g_slice_new0 (chain_t);
   /* g_print ("ALLOCATED CHAIN (%3u): %p\n", __chains, ret); */
   return ret;
 }
@@ -193,7 +179,7 @@ void
 __gst_parse_chain_free (chain_t *data)
 {
   /* g_print ("FREEING CHAIN   (%3u): %p\n", __chains - 1, data); */
-  g_free (data);
+  g_slice_free (chain_t, data);
   g_return_if_fail (__chains > 0);
   __chains--;
 }
@@ -206,18 +192,15 @@ typedef struct {
   GstElement *sink;
   GstCaps *caps;
   gulong signal_id;
-  /* FIXME: need to connect to "disposed" signal to clean up,
-   * but there is no such signal */
 } DelayedLink;
 
 typedef struct {
-  GstElement *parent;
   gchar *name;
   gchar *value_str;
   gulong signal_id;
 } DelayedSet;
 
-/*** define SET_ERROR and ERROR macros/functions */
+/*** define SET_ERROR macro/function */
 
 #ifdef G_HAVE_ISO_VARARGS
 
@@ -229,9 +212,6 @@ G_STMT_START { \
   } \
 } G_STMT_END
 
-#  define ERROR(type, ...) \
-  SET_ERROR (graph->error, (type), __VA_ARGS__ )
-
 #elif defined(G_HAVE_GNUC_VARARGS)
 
 #  define SET_ERROR(error, type, args...) \
@@ -241,9 +221,6 @@ G_STMT_START { \
     g_set_error ((error), GST_PARSE_ERROR, (type), args ); \
   } \
 } G_STMT_END
-
-#  define ERROR(type, args...) \
-  SET_ERROR (graph->error,(type) , args )
 
 #else
 
@@ -283,18 +260,14 @@ SET_ERROR (GError **error, gint type, const char *format, ...)
 /* #  define YYFPRINTF(a, ...) GST_CAT_DEBUG (GST_CAT_PIPELINE, __VA_ARGS__) */
 #    define YYFPRINTF(a, ...) \
 G_STMT_START { \
-     gchar *temp = g_strdup_printf (__VA_ARGS__); \
-     GST_CAT_LOG (GST_CAT_PIPELINE, temp); \
-     g_free (temp); \
+     GST_CAT_LOG (GST_CAT_PIPELINE, __VA_ARGS__); \
 } G_STMT_END
 
 #  elif defined(G_HAVE_GNUC_VARARGS)
 
 #    define YYFPRINTF(a, args...) \
 G_STMT_START { \
-     gchar *temp = g_strdup_printf ( args ); \
-     GST_CAT_LOG (GST_CAT_PIPELINE, temp); \
-     g_free (temp); \
+     GST_CAT_LOG (GST_CAT_PIPELINE, args); \
 } G_STMT_END
 
 #  else
@@ -322,7 +295,13 @@ YYPRINTF(const char *format, ...)
           g_list_append ((graph)->ctx->missing_elements, g_strdup (name));  \
     } } G_STMT_END
 
-#define GST_BIN_MAKE(res, type, chainval, assign, free_string) \
+static void
+no_free (gconstpointer foo)
+{
+  /* do nothing */
+}
+
+#define GST_BIN_MAKE(res, type, chainval, assign, type_string_free_func) \
 G_STMT_START { \
   chain_t *chain = chainval; \
   GSList *walk; \
@@ -333,8 +312,7 @@ G_STMT_START { \
     g_slist_foreach (assign, (GFunc) gst_parse_strfree, NULL); \
     g_slist_free (assign); \
     gst_object_unref (bin); \
-    if (free_string) \
-      gst_parse_strfree (type); /* Need to clean up the string */ \
+    type_string_free_func (type); /* Need to clean up the string */ \
     YYERROR; \
   } else if (!bin) { \
     ADD_MISSING_ELEMENT(graph, type); \
@@ -382,6 +360,54 @@ G_STMT_START { \
   MAKE_LINK (link, NULL, _src, pads, NULL, NULL, NULL); \
 } G_STMT_END
 
+static void
+gst_parse_free_delayed_set (DelayedSet *set)
+{
+  g_free(set->name);
+  g_free(set->value_str);
+  g_slice_free(DelayedSet, set);
+}
+
+static void gst_parse_new_child(GstChildProxy *child_proxy, GObject *object,
+                                gpointer data);
+
+static void
+gst_parse_add_delayed_set (GstElement *element, gchar *name, gchar *value_str)
+{
+  DelayedSet *data = g_slice_new0 (DelayedSet);
+  
+  GST_CAT_LOG_OBJECT (GST_CAT_PIPELINE, element, "delaying property set %s to %s",
+    name, value_str);
+  
+  data->name = g_strdup(name);
+  data->value_str = g_strdup(value_str);
+  data->signal_id = g_signal_connect_data(element, "child-added",
+      G_CALLBACK (gst_parse_new_child), data, (GClosureNotify)
+      gst_parse_free_delayed_set, (GConnectFlags) 0);
+      
+  /* FIXME: we would need to listen on all intermediate bins too */
+  if (GST_IS_BIN (element)) {
+    gchar **names, **current;
+    GstElement *parent, *child;
+    
+    current = names = g_strsplit (name, "::", -1);
+    parent = gst_bin_get_by_name (GST_BIN_CAST (element), current[0]);
+    current++;
+    while (parent && current[0]) {
+      child = gst_bin_get_by_name (GST_BIN (parent), current[0]);
+      if (!child && current[1]) {
+        char *sub_name = g_strjoinv ("::", &current[0]);
+        
+        gst_parse_add_delayed_set(parent, sub_name, value_str);
+        g_free (sub_name);
+      }
+      parent = child;
+      current++;
+    }
+    g_strfreev (names);
+  }
+}
+
 static void gst_parse_new_child(GstChildProxy *child_proxy, GObject *object,
                                 gpointer data)
 {
@@ -390,29 +416,55 @@ static void gst_parse_new_child(GstChildProxy *child_proxy, GObject *object,
   GValue v = { 0, }; 
   GstObject *target = NULL;
   GType value_type;
+  
+  GST_CAT_LOG_OBJECT (GST_CAT_PIPELINE, child_proxy, "new child %s, checking property %s",
+      GST_OBJECT_NAME(object), set->name);
 
-  if (gst_child_proxy_lookup (GST_OBJECT (set->parent), set->name, &target, &pspec)) { 
-    value_type = G_PARAM_SPEC_VALUE_TYPE (pspec);
+  if (gst_child_proxy_lookup (GST_OBJECT (child_proxy), set->name, &target, &pspec)) { 
+    gboolean got_value = FALSE;
 
-    GST_CAT_LOG (GST_CAT_PIPELINE, "parsing delayed property %s as a %s from %s", pspec->name,
-      g_type_name (value_type), set->value_str);
+    value_type = pspec->value_type;
+
+    GST_CAT_LOG_OBJECT (GST_CAT_PIPELINE, child_proxy, "parsing delayed property %s as a %s from %s",
+      pspec->name, g_type_name (value_type), set->value_str);
     g_value_init (&v, value_type);
-    if (gst_value_deserialize (&v, set->value_str)) {
-      g_object_set_property (G_OBJECT (target), pspec->name, &v);
+    if (gst_value_deserialize (&v, set->value_str))
+      got_value = TRUE;
+    else if (g_type_is_a (value_type, GST_TYPE_ELEMENT)) {
+       GstElement *bin;
+       
+       bin = gst_parse_bin_from_description (set->value_str, TRUE, NULL);
+       if (bin) {
+         g_value_set_object (&v, bin);
+         got_value = TRUE;
+       }
     }
     g_signal_handler_disconnect (child_proxy, set->signal_id);
-    g_free(set->name);
-    g_free(set->value_str);
-    g_free(set);
+    if (!got_value)
+      goto error;
+    g_object_set_property (G_OBJECT (target), pspec->name, &v);
+  } else {
+    const gchar *obj_name = GST_OBJECT_NAME(object);
+    gint len = strlen (obj_name);
+
+    /* do a delayed set */
+    if ((strlen (set->name) > (len + 2)) && !strncmp (set->name, obj_name, len) && !strncmp (&set->name[len], "::", 2)) {
+      gst_parse_add_delayed_set (GST_ELEMENT(child_proxy), set->name, set->value_str);
+    }
   }
 
+out:
   if (G_IS_VALUE (&v))
     g_value_unset (&v);
   if (target)
     gst_object_unref (target);
   return;
-}
 
+error:
+  GST_CAT_ERROR (GST_CAT_PIPELINE, "could not set property \"%s\" in element \"%s\"",
+	 pspec->name, GST_ELEMENT_NAME (target));
+  goto out;
+}
 
 static void
 gst_parse_element_set (gchar *value, GstElement *element, graph_t *graph)
@@ -446,22 +498,31 @@ gst_parse_element_set (gchar *value, GstElement *element, graph_t *graph)
   gst_parse_unescape (pos);
 
   if (gst_child_proxy_lookup (GST_OBJECT (element), value, &target, &pspec)) { 
-    value_type = G_PARAM_SPEC_VALUE_TYPE (pspec); 
-    GST_CAT_LOG (GST_CAT_PIPELINE, "parsing property %s as a %s", pspec->name,
+    gboolean got_value = FALSE;
+
+    value_type = pspec->value_type;
+
+    GST_CAT_LOG_OBJECT (GST_CAT_PIPELINE, element, "parsing property %s as a %s", pspec->name,
       g_type_name (value_type));
     g_value_init (&v, value_type);
-    if (!gst_value_deserialize (&v, pos))
+    if (gst_value_deserialize (&v, pos))
+      got_value = TRUE;
+    else if (g_type_is_a (value_type, GST_TYPE_ELEMENT)) {
+       GstElement *bin;
+       
+       bin = gst_parse_bin_from_description (pos, TRUE, NULL);
+       if (bin) {
+         g_value_set_object (&v, bin);
+         got_value = TRUE;
+       }
+    }
+    if (!got_value)
       goto error;
     g_object_set_property (G_OBJECT (target), pspec->name, &v);
   } else { 
     /* do a delayed set */
     if (GST_IS_CHILD_PROXY (element)) {
-      DelayedSet *data = g_new (DelayedSet, 1);
-      
-      data->parent = element;
-      data->name = g_strdup(value);
-      data->value_str = g_strdup(pos);
-      data->signal_id = g_signal_connect(GST_OBJECT (element),"child-added", G_CALLBACK (gst_parse_new_child), data);
+      gst_parse_add_delayed_set (element, value, pos);
     }
     else {
       SET_ERROR (graph->error, GST_PARSE_ERROR_NO_SUCH_PROPERTY, \
@@ -484,6 +545,7 @@ error:
 	 value, GST_ELEMENT_NAME (element), pos); 
   goto out;
 }
+
 static inline void
 gst_parse_free_link (link_t *link)
 {
@@ -498,10 +560,19 @@ gst_parse_free_link (link_t *link)
 }
 
 static void
+gst_parse_free_delayed_link (DelayedLink *link)
+{
+  g_free (link->src_pad);
+  g_free (link->sink_pad);
+  if (link->caps) gst_caps_unref (link->caps);
+  g_slice_free (DelayedLink, link);
+}
+
+static void
 gst_parse_found_pad (GstElement *src, GstPad *pad, gpointer data)
 {
-  DelayedLink *link = (DelayedLink *) data;
-  
+  DelayedLink *link = data;
+
   GST_CAT_INFO (GST_CAT_PIPELINE, "trying delayed linking %s:%s to %s:%s", 
                 GST_STR_NULL (GST_ELEMENT_NAME (src)), GST_STR_NULL (link->src_pad),
                 GST_STR_NULL (GST_ELEMENT_NAME (link->sink)), GST_STR_NULL (link->sink_pad));
@@ -514,12 +585,9 @@ gst_parse_found_pad (GstElement *src, GstPad *pad, gpointer data)
                	   GST_STR_NULL (GST_ELEMENT_NAME (src)), GST_STR_NULL (link->src_pad),
                	   GST_STR_NULL (GST_ELEMENT_NAME (link->sink)), GST_STR_NULL (link->sink_pad));
     g_signal_handler_disconnect (src, link->signal_id);
-    g_free (link->src_pad);
-    g_free (link->sink_pad);
-    if (link->caps) gst_caps_unref (link->caps);
-    g_free (link);
   }
 }
+
 /* both padnames and the caps may be NULL */
 static gboolean
 gst_parse_perform_delayed_link (GstElement *src, const gchar *src_pad, 
@@ -534,7 +602,7 @@ gst_parse_perform_delayed_link (GstElement *src, const gchar *src_pad,
     if ((GST_PAD_TEMPLATE_DIRECTION (templ) == GST_PAD_SRC) &&
         (GST_PAD_TEMPLATE_PRESENCE(templ) == GST_PAD_SOMETIMES))
     {
-      DelayedLink *data = g_new (DelayedLink, 1); 
+      DelayedLink *data = g_slice_new (DelayedLink); 
       
       /* TODO: maybe we should check if src_pad matches this template's names */
 
@@ -550,13 +618,15 @@ gst_parse_perform_delayed_link (GstElement *src, const gchar *src_pad,
       } else {
       	data->caps = NULL;
       }
-      data->signal_id = g_signal_connect (G_OBJECT (src), "pad-added", 
-          G_CALLBACK (gst_parse_found_pad), data);
+      data->signal_id = g_signal_connect_data (src, "pad-added",
+          G_CALLBACK (gst_parse_found_pad), data,
+          (GClosureNotify) gst_parse_free_delayed_link, (GConnectFlags) 0);
       return TRUE;
     }
   }
   return FALSE;
 }
+
 /*
  * performs a link and frees the struct. src and sink elements must be given
  * return values   0 - link performed
@@ -632,6 +702,9 @@ error:
 static int yyerror (void *scanner, graph_t *graph, const char *s);
 
 
+/* Line 189 of yacc.c  */
+#line 704 "grammar.tab.c"
+
 /* Enabling traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -650,32 +723,55 @@ static int yyerror (void *scanner, graph_t *graph, const char *s);
 # define YYTOKEN_TABLE 0
 #endif
 
+
+/* Tokens.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     PARSE_URL = 258,
+     IDENTIFIER = 259,
+     BINREF = 260,
+     PADREF = 261,
+     REF = 262,
+     ASSIGNMENT = 263,
+     LINK = 264
+   };
+#endif
+
+
+
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 533 "./grammar.y"
 {
+
+/* Line 214 of yacc.c  */
+#line 623 "./grammar.y"
+
     gchar *s;
     chain_t *c;
     link_t *l;
     GstElement *e;
     GSList *p;
     graph_t *g;
-}
-/* Line 187 of yacc.c.  */
-#line 663 "grammar.tab.c"
-	YYSTYPE;
+
+
+
+/* Line 214 of yacc.c  */
+#line 760 "grammar.tab.c"
+} YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
 #endif
-
 
 
 /* Copy the second part of user declarations.  */
 
 
-/* Line 216 of yacc.c.  */
-#line 676 "grammar.tab.c"
+/* Line 264 of yacc.c  */
+#line 772 "grammar.tab.c"
 
 #ifdef short
 # undef short
@@ -750,14 +846,14 @@ typedef short int yytype_int16;
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static int
-YYID (int i)
+YYID (int yyi)
 #else
 static int
-YYID (i)
-    int i;
+YYID (yyi)
+    int yyi;
 #endif
 {
-  return i;
+  return yyi;
 }
 #endif
 
@@ -838,9 +934,9 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
-  yytype_int16 yyss;
-  YYSTYPE yyvs;
-  };
+  yytype_int16 yyss_alloc;
+  YYSTYPE yyvs_alloc;
+};
 
 /* The size of the maximum gap between one aligned stack and the next.  */
 # define YYSTACK_GAP_MAXIMUM (sizeof (union yyalloc) - 1)
@@ -874,12 +970,12 @@ union yyalloc
    elements in the stack, and YYPTR gives the new location of the
    stack.  Advance YYPTR to a properly aligned location for the next
    stack.  */
-# define YYSTACK_RELOCATE(Stack)					\
+# define YYSTACK_RELOCATE(Stack_alloc, Stack)				\
     do									\
       {									\
 	YYSIZE_T yynewbytes;						\
-	YYCOPY (&yyptr->Stack, Stack, yysize);				\
-	Stack = &yyptr->Stack;						\
+	YYCOPY (&yyptr->Stack_alloc, Stack, yysize);			\
+	Stack = &yyptr->Stack_alloc;					\
 	yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
 	yyptr += yynewbytes / sizeof (*yyptr);				\
       }									\
@@ -968,10 +1064,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   568,   568,   582,   586,   587,   589,   590,   593,   596,
-     601,   602,   606,   607,   610,   611,   614,   615,   616,   619,
-     632,   633,   634,   637,   642,   643,   678,   706,   707,   721,
-     741,   766,   769
+       0,   658,   658,   672,   676,   677,   679,   680,   683,   686,
+     691,   692,   696,   697,   700,   701,   704,   705,   706,   709,
+     722,   723,   724,   727,   732,   733,   768,   796,   797,   811,
+     831,   856,   859
 };
 #endif
 
@@ -1301,17 +1397,20 @@ yy_symbol_print (yyoutput, yytype, yyvaluep, scanner, graph)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_stack_print (yytype_int16 *bottom, yytype_int16 *top)
+yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
 #else
 static void
-yy_stack_print (bottom, top)
-    yytype_int16 *bottom;
-    yytype_int16 *top;
+yy_stack_print (yybottom, yytop)
+    yytype_int16 *yybottom;
+    yytype_int16 *yytop;
 #endif
 {
   YYFPRINTF (stderr, "Stack now");
-  for (; bottom <= top; ++bottom)
-    YYFPRINTF (stderr, " %d", *bottom);
+  for (; yybottom <= yytop; yybottom++)
+    {
+      int yybot = *yybottom;
+      YYFPRINTF (stderr, " %d", yybot);
+    }
   YYFPRINTF (stderr, "\n");
 }
 
@@ -1347,11 +1446,11 @@ yy_reduce_print (yyvsp, yyrule, scanner, graph)
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
     {
-      fprintf (stderr, "   $%d = ", yyi + 1);
+      YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
 		       &(yyvsp[(yyi + 1) - (yynrhs)])
 		       		       , scanner, graph);
-      fprintf (stderr, "\n");
+      YYFPRINTF (stderr, "\n");
     }
 }
 
@@ -1635,10 +1734,8 @@ yydestruct (yymsg, yytype, yyvaluep, scanner, graph)
 	break;
     }
 }
-
 
 /* Prevent warnings from -Wmissing-prototypes.  */
-
 #ifdef YYPARSE_PARAM
 #if defined __STDC__ || defined __cplusplus
 int yyparse (void *YYPARSE_PARAM);
@@ -1657,10 +1754,9 @@ int yyparse ();
 
 
 
-
-/*----------.
-| yyparse.  |
-`----------*/
+/*-------------------------.
+| yyparse or yypush_parse.  |
+`-------------------------*/
 
 #ifdef YYPARSE_PARAM
 #if (defined __STDC__ || defined __C99__FUNC__ \
@@ -1685,22 +1781,46 @@ yyparse (scanner, graph)
 #endif
 #endif
 {
-  /* The look-ahead symbol.  */
+/* The lookahead symbol.  */
 int yychar;
 
-/* The semantic value of the look-ahead symbol.  */
+/* The semantic value of the lookahead symbol.  */
 YYSTYPE yylval;
 
-/* Number of syntax errors so far.  */
-int yynerrs;
+    /* Number of syntax errors so far.  */
+    int yynerrs;
 
-  int yystate;
+    int yystate;
+    /* Number of tokens to shift before error messages enabled.  */
+    int yyerrstatus;
+
+    /* The stacks and their tools:
+       `yyss': related to states.
+       `yyvs': related to semantic values.
+
+       Refer to the stacks thru separate pointers, to allow yyoverflow
+       to reallocate them elsewhere.  */
+
+    /* The state stack.  */
+    yytype_int16 yyssa[YYINITDEPTH];
+    yytype_int16 *yyss;
+    yytype_int16 *yyssp;
+
+    /* The semantic value stack.  */
+    YYSTYPE yyvsa[YYINITDEPTH];
+    YYSTYPE *yyvs;
+    YYSTYPE *yyvsp;
+
+    YYSIZE_T yystacksize;
+
   int yyn;
   int yyresult;
-  /* Number of tokens to shift before error messages enabled.  */
-  int yyerrstatus;
-  /* Look-ahead token as an internal (translated) token number.  */
-  int yytoken = 0;
+  /* Lookahead token as an internal (translated) token number.  */
+  int yytoken;
+  /* The variables used to return semantic value and location from the
+     action routines.  */
+  YYSTYPE yyval;
+
 #if YYERROR_VERBOSE
   /* Buffer for error messages, and its allocated size.  */
   char yymsgbuf[128];
@@ -1708,51 +1828,28 @@ int yynerrs;
   YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
-  /* Three stacks and their tools:
-     `yyss': related to states,
-     `yyvs': related to semantic values,
-     `yyls': related to locations.
-
-     Refer to the stacks thru separate pointers, to allow yyoverflow
-     to reallocate them elsewhere.  */
-
-  /* The state stack.  */
-  yytype_int16 yyssa[YYINITDEPTH];
-  yytype_int16 *yyss = yyssa;
-  yytype_int16 *yyssp;
-
-  /* The semantic value stack.  */
-  YYSTYPE yyvsa[YYINITDEPTH];
-  YYSTYPE *yyvs = yyvsa;
-  YYSTYPE *yyvsp;
-
-
-
 #define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
-
-  YYSIZE_T yystacksize = YYINITDEPTH;
-
-  /* The variables used to return semantic value and location from the
-     action routines.  */
-  YYSTYPE yyval;
-
 
   /* The number of symbols on the RHS of the reduced rule.
      Keep to zero when no symbol should be popped.  */
   int yylen = 0;
+
+  yytoken = 0;
+  yyss = yyssa;
+  yyvs = yyvsa;
+  yystacksize = YYINITDEPTH;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
   yystate = 0;
   yyerrstatus = 0;
   yynerrs = 0;
-  yychar = YYEMPTY;		/* Cause a token to be read.  */
+  yychar = YYEMPTY; /* Cause a token to be read.  */
 
   /* Initialize stack pointers.
      Waste one element of value and location stack
      so that they stay on the same level as the state stack.
      The wasted elements are never initialized.  */
-
   yyssp = yyss;
   yyvsp = yyvs;
 
@@ -1782,7 +1879,6 @@ int yynerrs;
 	YYSTYPE *yyvs1 = yyvs;
 	yytype_int16 *yyss1 = yyss;
 
-
 	/* Each stack pointer address is followed by the size of the
 	   data in use in that stack, in bytes.  This used to be a
 	   conditional around just the two extra args, but that might
@@ -1790,7 +1886,6 @@ int yynerrs;
 	yyoverflow (YY_("memory exhausted"),
 		    &yyss1, yysize * sizeof (*yyssp),
 		    &yyvs1, yysize * sizeof (*yyvsp),
-
 		    &yystacksize);
 
 	yyss = yyss1;
@@ -1813,9 +1908,8 @@ int yynerrs;
 	  (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
 	if (! yyptr)
 	  goto yyexhaustedlab;
-	YYSTACK_RELOCATE (yyss);
-	YYSTACK_RELOCATE (yyvs);
-
+	YYSTACK_RELOCATE (yyss_alloc, yyss);
+	YYSTACK_RELOCATE (yyvs_alloc, yyvs);
 #  undef YYSTACK_RELOCATE
 	if (yyss1 != yyssa)
 	  YYSTACK_FREE (yyss1);
@@ -1826,7 +1920,6 @@ int yynerrs;
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
 
-
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
 		  (unsigned long int) yystacksize));
 
@@ -1836,6 +1929,9 @@ int yynerrs;
 
   YYDPRINTF ((stderr, "Entering state %d\n", yystate));
 
+  if (yystate == YYFINAL)
+    YYACCEPT;
+
   goto yybackup;
 
 /*-----------.
@@ -1844,16 +1940,16 @@ int yynerrs;
 yybackup:
 
   /* Do appropriate processing given the current state.  Read a
-     look-ahead token if we need one and don't already have one.  */
+     lookahead token if we need one and don't already have one.  */
 
-  /* First try to decide what to do without reference to look-ahead token.  */
+  /* First try to decide what to do without reference to lookahead token.  */
   yyn = yypact[yystate];
   if (yyn == YYPACT_NINF)
     goto yydefault;
 
-  /* Not known => get a look-ahead token if don't already have one.  */
+  /* Not known => get a lookahead token if don't already have one.  */
 
-  /* YYCHAR is either YYEMPTY or YYEOF or a valid look-ahead symbol.  */
+  /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token: "));
@@ -1885,20 +1981,16 @@ yybackup:
       goto yyreduce;
     }
 
-  if (yyn == YYFINAL)
-    YYACCEPT;
-
   /* Count tokens shifted since error; after three, turn off error
      status.  */
   if (yyerrstatus)
     yyerrstatus--;
 
-  /* Shift the look-ahead token.  */
+  /* Shift the lookahead token.  */
   YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
 
-  /* Discard the shifted token unless it is eof.  */
-  if (yychar != YYEOF)
-    yychar = YYEMPTY;
+  /* Discard the shifted token.  */
+  yychar = YYEMPTY;
 
   yystate = yyn;
   *++yyvsp = yylval;
@@ -1938,7 +2030,9 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 568 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 658 "./grammar.y"
     { (yyval.e) = gst_element_factory_make ((yyvsp[(1) - (1)].s), NULL); 
 						if ((yyval.e) == NULL) {
 						  ADD_MISSING_ELEMENT (graph, (yyvsp[(1) - (1)].s));
@@ -1956,97 +2050,131 @@ yyreduce:
     break;
 
   case 3:
-#line 582 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 672 "./grammar.y"
     { gst_parse_element_set ((yyvsp[(2) - (2)].s), (yyvsp[(1) - (2)].e), graph);
 						(yyval.e) = (yyvsp[(1) - (2)].e);
 	                                      ;}
     break;
 
   case 4:
-#line 586 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 676 "./grammar.y"
     { (yyval.p) = NULL; ;}
     break;
 
   case 5:
-#line 587 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 677 "./grammar.y"
     { (yyval.p) = g_slist_prepend ((yyvsp[(1) - (2)].p), (yyvsp[(2) - (2)].s)); ;}
     break;
 
   case 6:
-#line 589 "./grammar.y"
-    { GST_BIN_MAKE ((yyval.c), "bin", (yyvsp[(3) - (4)].c), (yyvsp[(2) - (4)].p), FALSE); ;}
+
+/* Line 1455 of yacc.c  */
+#line 679 "./grammar.y"
+    { GST_BIN_MAKE ((yyval.c), "bin", (yyvsp[(3) - (4)].c), (yyvsp[(2) - (4)].p), no_free); ;}
     break;
 
   case 7:
-#line 590 "./grammar.y"
-    { GST_BIN_MAKE ((yyval.c), (yyvsp[(1) - (4)].s), (yyvsp[(3) - (4)].c), (yyvsp[(2) - (4)].p), TRUE); 
+
+/* Line 1455 of yacc.c  */
+#line 680 "./grammar.y"
+    { GST_BIN_MAKE ((yyval.c), (yyvsp[(1) - (4)].s), (yyvsp[(3) - (4)].c), (yyvsp[(2) - (4)].p), gst_parse_strfree);
 						gst_parse_strfree ((yyvsp[(1) - (4)].s));
 					      ;}
     break;
 
   case 8:
-#line 593 "./grammar.y"
-    { GST_BIN_MAKE ((yyval.c), (yyvsp[(1) - (3)].s), NULL, (yyvsp[(2) - (3)].p), TRUE); 
+
+/* Line 1455 of yacc.c  */
+#line 683 "./grammar.y"
+    { GST_BIN_MAKE ((yyval.c), (yyvsp[(1) - (3)].s), NULL, (yyvsp[(2) - (3)].p), gst_parse_strfree);
 						gst_parse_strfree ((yyvsp[(1) - (3)].s));
 					      ;}
     break;
 
   case 9:
-#line 596 "./grammar.y"
-    { GST_BIN_MAKE ((yyval.c), (yyvsp[(1) - (4)].s), NULL, (yyvsp[(2) - (4)].p), TRUE); 
+
+/* Line 1455 of yacc.c  */
+#line 686 "./grammar.y"
+    { GST_BIN_MAKE ((yyval.c), (yyvsp[(1) - (4)].s), NULL, (yyvsp[(2) - (4)].p), gst_parse_strfree);
 						gst_parse_strfree ((yyvsp[(1) - (4)].s));
 					      ;}
     break;
 
   case 10:
-#line 601 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 691 "./grammar.y"
     { (yyval.p) = g_slist_prepend (NULL, (yyvsp[(1) - (1)].s)); ;}
     break;
 
   case 11:
-#line 602 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 692 "./grammar.y"
     { (yyval.p) = (yyvsp[(2) - (2)].p);
 						(yyval.p) = g_slist_prepend ((yyval.p), (yyvsp[(1) - (2)].s));
 					      ;}
     break;
 
   case 12:
-#line 606 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 696 "./grammar.y"
     { (yyval.p) = g_slist_prepend (NULL, (yyvsp[(2) - (2)].s)); ;}
     break;
 
   case 13:
-#line 607 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 697 "./grammar.y"
     { (yyval.p) = g_slist_prepend ((yyvsp[(3) - (3)].p), (yyvsp[(2) - (3)].s)); ;}
     break;
 
   case 14:
-#line 610 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 700 "./grammar.y"
     { MAKE_REF ((yyval.l), (yyvsp[(1) - (1)].s), NULL); ;}
     break;
 
   case 15:
-#line 611 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 701 "./grammar.y"
     { MAKE_REF ((yyval.l), (yyvsp[(1) - (2)].s), (yyvsp[(2) - (2)].p)); ;}
     break;
 
   case 16:
-#line 614 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 704 "./grammar.y"
     { (yyval.l) = (yyvsp[(1) - (1)].l); ;}
     break;
 
   case 17:
-#line 615 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 705 "./grammar.y"
     { MAKE_REF ((yyval.l), NULL, (yyvsp[(1) - (1)].p)); ;}
     break;
 
   case 18:
-#line 616 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 706 "./grammar.y"
     { MAKE_REF ((yyval.l), NULL, NULL); ;}
     break;
 
   case 19:
-#line 619 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 709 "./grammar.y"
     { (yyval.l) = (yyvsp[(1) - (3)].l);
 						if ((yyvsp[(2) - (3)].s)) {
 						  (yyval.l)->caps = gst_caps_from_string ((yyvsp[(2) - (3)].s));
@@ -2061,22 +2189,30 @@ yyreduce:
     break;
 
   case 20:
-#line 632 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 722 "./grammar.y"
     { (yyval.p) = g_slist_prepend (NULL, (yyvsp[(1) - (1)].l)); ;}
     break;
 
   case 21:
-#line 633 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 723 "./grammar.y"
     { (yyval.p) = g_slist_prepend ((yyvsp[(2) - (2)].p), (yyvsp[(1) - (2)].l)); ;}
     break;
 
   case 22:
-#line 634 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 724 "./grammar.y"
     { (yyval.p) = (yyvsp[(1) - (2)].p); ;}
     break;
 
   case 23:
-#line 637 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 727 "./grammar.y"
     { (yyval.c) = gst_parse_chain_new ();
 						(yyval.c)->first = (yyval.c)->last = (yyvsp[(1) - (1)].e);
 						(yyval.c)->front = (yyval.c)->back = NULL;
@@ -2085,12 +2221,16 @@ yyreduce:
     break;
 
   case 24:
-#line 642 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 732 "./grammar.y"
     { (yyval.c) = (yyvsp[(1) - (1)].c); ;}
     break;
 
   case 25:
-#line 643 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 733 "./grammar.y"
     { if ((yyvsp[(1) - (2)].c)->back && (yyvsp[(2) - (2)].c)->front) {
 						  if (!(yyvsp[(1) - (2)].c)->back->sink_name) {
 						    SET_ERROR (graph->error, GST_PARSE_ERROR_LINK, _("link without source element"));
@@ -2129,7 +2269,9 @@ yyreduce:
     break;
 
   case 26:
-#line 678 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 768 "./grammar.y"
     { GSList *walk;
 						if ((yyvsp[(1) - (2)].c)->back) {
 						  (yyvsp[(2) - (2)].p) = g_slist_prepend ((yyvsp[(2) - (2)].p), (yyvsp[(1) - (2)].c)->back);
@@ -2161,12 +2303,16 @@ yyreduce:
     break;
 
   case 27:
-#line 706 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 796 "./grammar.y"
     { (yyval.c) = (yyvsp[(1) - (2)].c); ;}
     break;
 
   case 28:
-#line 707 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 797 "./grammar.y"
     { if ((yyvsp[(2) - (2)].c)->front) {
 						  if (!(yyvsp[(2) - (2)].c)->front->src_name) {
 						    SET_ERROR (graph->error, GST_PARSE_ERROR_LINK, _("link without source element"));
@@ -2184,7 +2330,9 @@ yyreduce:
     break;
 
   case 29:
-#line 721 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 811 "./grammar.y"
     { (yyval.c) = (yyvsp[(2) - (2)].c);
 						if ((yyval.c)->front) {
 						  GstElement *element = 
@@ -2208,7 +2356,9 @@ yyreduce:
     break;
 
   case 30:
-#line 741 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 831 "./grammar.y"
     { GstElement *element =
 							  gst_element_make_from_uri (GST_URI_SINK, (yyvsp[(2) - (2)].s), NULL);
 						if (!element) {
@@ -2236,14 +2386,18 @@ yyreduce:
     break;
 
   case 31:
-#line 766 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 856 "./grammar.y"
     { SET_ERROR (graph->error, GST_PARSE_ERROR_EMPTY, _("empty pipeline not allowed"));
 						(yyval.g) = graph;
 					      ;}
     break;
 
   case 32:
-#line 769 "./grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 859 "./grammar.y"
     { (yyval.g) = graph;
 						if ((yyvsp[(1) - (1)].c)->front) {
 						  if (!(yyvsp[(1) - (1)].c)->front->src_name) {
@@ -2268,8 +2422,9 @@ yyreduce:
     break;
 
 
-/* Line 1267 of yacc.c.  */
-#line 2270 "grammar.tab.c"
+
+/* Line 1455 of yacc.c  */
+#line 2425 "grammar.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2279,7 +2434,6 @@ yyreduce:
   YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
-
 
   /* Now `shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
@@ -2345,7 +2499,7 @@ yyerrlab:
 
   if (yyerrstatus == 3)
     {
-      /* If just tried and failed to reuse look-ahead token after an
+      /* If just tried and failed to reuse lookahead token after an
 	 error, discard it.  */
 
       if (yychar <= YYEOF)
@@ -2362,7 +2516,7 @@ yyerrlab:
 	}
     }
 
-  /* Else will try to reuse look-ahead token after shifting the error
+  /* Else will try to reuse lookahead token after shifting the error
      token.  */
   goto yyerrlab1;
 
@@ -2419,9 +2573,6 @@ yyerrlab1:
       YY_STACK_PRINT (yyss, yyssp);
     }
 
-  if (yyn == YYFINAL)
-    YYACCEPT;
-
   *++yyvsp = yylval;
 
 
@@ -2446,7 +2597,7 @@ yyabortlab:
   yyresult = 1;
   goto yyreturn;
 
-#ifndef yyoverflow
+#if !defined(yyoverflow) || YYERROR_VERBOSE
 /*-------------------------------------------------.
 | yyexhaustedlab -- memory exhaustion comes here.  |
 `-------------------------------------------------*/
@@ -2457,7 +2608,7 @@ yyexhaustedlab:
 #endif
 
 yyreturn:
-  if (yychar != YYEOF && yychar != YYEMPTY)
+  if (yychar != YYEMPTY)
      yydestruct ("Cleanup: discarding lookahead",
 		 yytoken, &yylval, scanner, graph);
   /* Do not reclaim the symbols of the rule which action triggered
@@ -2483,7 +2634,9 @@ yyreturn:
 }
 
 
-#line 792 "./grammar.y"
+
+/* Line 1675 of yacc.c  */
+#line 882 "./grammar.y"
 
 
 

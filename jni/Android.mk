@@ -8,7 +8,7 @@ LOCAL_SRC_FILES := svtplayer.c
 
 include $(BUILD_SHARED_LIBRARY)
 
-GLIB_TOP := $(LOCAL_PATH)/glib-2.13.0
+GLIB_TOP := $(LOCAL_PATH)/glib-2.26.1
 GST_TOP  := $(LOCAL_PATH)/gstreamer-0.10.31
 
 include $(GLIB_TOP)/Android.mk

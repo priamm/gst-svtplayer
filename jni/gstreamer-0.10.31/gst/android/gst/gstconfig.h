@@ -59,10 +59,7 @@
 #define GST_DISABLE_TRACE 1
 #define GST_DISABLE_ALLOC_TRACE 1
 #define GST_DISABLE_REGISTRY 1
-#define GST_DISABLE_ENUMTYPES 1
-#define GST_DISABLE_INDEX 1
 #define GST_DISABLE_PLUGIN 1
-#define GST_DISABLE_URI 1
 #define GST_DISABLE_XML 1
 #define GST_DISABLE_LOADSAVE_REGISTRY 1
 #define GST_HAVE_GLIB_2_8 1
@@ -97,7 +94,7 @@
  *
  * Configures the inclusion of the gst-lauch parser
  */
-#undef GST_DISABLE_PARSE
+/* #undef GST_DISABLE_PARSE */
 
 /**
  * GST_DISABLE_TRACE:
@@ -105,7 +102,7 @@
  * Configures the inclusion of a resource tracing facillity
  * (seems to be unused)
  */
-/* #undef GST_DISABLE_TRACE */
+#define GST_DISABLE_TRACE 1
 
 /**
  * GST_DISABLE_ALLOC_TRACE:
@@ -159,6 +156,32 @@
  * header files so we know whether we can use G_GNUC_PRINTF or not */
 #undef GST_USING_PRINTF_EXTENSION
 
+/* GST_DISABLE_PRINTF_EXTENSION:
+ *
+ * Define this to debug your debug log messages and make gcc spew warnings
+ * if printf format string and arguments don't match up (this is usually
+ * not the case when libc and gcc are used because printf format warnings
+ * have to be disabled when the printf extension mechanism is in use).
+ *
+ * Note that using this option disables 'pretty logging' of GStreamer objects
+ * like caps, tags, structures, events, pads etc., so that only their address
+ * will be printed in the log.
+ *
+ * This define only disables use of the special registered printf format
+ * extensions in the code compiled with it defined. It does not stop
+ * GStreamer from registering these extensions in the first place if it
+ * was compiled against a libc that supports this.
+ *
+ * (not official API)
+ */
+#ifdef GST_DISABLE_PRINTF_EXTENSION
+  #undef GST_PTR_FORMAT
+  #define GST_PTR_FORMAT "p"
+  #undef GST_SEGMENT_FORMAT
+  #define GST_SEGMENT_FORMAT "p"
+  #undef GST_USING_PRINTF_EXTENSION
+#endif
+
 /* whether or not the CPU supports unaligned access */
 #define GST_HAVE_UNALIGNED_ACCESS 0
 
@@ -171,7 +194,9 @@
 /* FIXME: move include to where we need it */
 /*#if (! (defined(GST_DISABLE_LOADSAVE) && defined(GST_DISABLE_REGISTRY)) )*/
 #ifndef GST_DISABLE_XML
+#ifndef GST_DISABLE_DEPRECATED
 # include <libxml/parser.h>
+#endif
 #else
   /* FIXME: 0.11 (replace by GST_DISABLE_XML) */
 # define GST_DISABLE_LOADSAVE_REGISTRY
