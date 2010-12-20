@@ -29,7 +29,9 @@
 
 #include <glib/gtypes.h>
 
-#ifdef  __GNUC__
+/* #ifdef  __GNUC__ */
+/* Android NDK defines the same thing, so silence GCC */
+#ifdef SOMETHING_UNDEFINED
 /* GCC does the right thing */
 # undef alloca
 # define alloca(size)   __builtin_alloca (size)

@@ -59,7 +59,7 @@ LOCAL_SRC_FILES := \
     gspawn.c
 
 LOCAL_MODULE := glib-2.0
-LOCAL_EXPORT_C_INCLUDES := $(GLIB_TOP) $(GLIB_TOP)/glib $(GLIB_TOP)/android
+LOCAL_EXPORT_C_INCLUDES := $(GLIB_TOP) $(GLIB_TOP)/glib
 
 LOCAL_CFLAGS := \
     -I$(GLIB_TOP)			\
