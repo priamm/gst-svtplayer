@@ -10,6 +10,6 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 
-GLIB_TOP := $(LOCAL_PATH)/glib
+GLIB_TOP := $(LOCAL_PATH)/glib-2.13.0
 
 include $(GLIB_TOP)/Android.mk
