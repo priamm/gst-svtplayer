@@ -279,6 +279,8 @@
 /* directory where plugins are located */
 #define PLUGINDIR ""
 
+#define GST_PLUGIN_SCANNER_INSTALLED "gst-plugin-scanner"
+
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 

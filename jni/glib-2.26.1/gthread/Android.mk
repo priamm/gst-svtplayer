@@ -2,7 +2,8 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := gthread-impl.c
+LOCAL_SRC_FILES := gthread-impl.c         
+LOCAL_SHARED_LIBRARIES := glib-2.0
 LOCAL_MODULE:= gthread-2.0
 
 LOCAL_EXPORT_C_INCLUDES := $(GLIB_TOP) $(GLIB_TOP)/glib $(GLIB_TOP)/gthread

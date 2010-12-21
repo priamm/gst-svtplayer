@@ -6,9 +6,7 @@ GST_INDEX_SRC :=      \
     gstindex.c        \
     gstindexfactory.c
 
-GST_TRACE_SRC := gsttrace.c
 GST_URI_SRC := gsturi.c
-GST_REGISTRY_SRC := gstregistrybinary.c
 
 GST_MAJORMINOR := 0.10
 
@@ -17,10 +15,12 @@ LOCAL_SRC_FILES :=        \
     gstobject.c           \
     gstbin.c              \
     gstbuffer.c           \
+    gstbufferlist.c       \
     gstbus.c              \
     gstcaps.c             \
     gstchildproxy.c       \
     gstclock.c            \
+    gstdatetime.c         \
     gstdebugutils.c       \
     gstelement.c          \
     gstelementfactory.c   \
@@ -41,25 +41,27 @@ LOCAL_SRC_FILES :=        \
     gstpipeline.c         \
     gstplugin.c           \
     gstpluginfeature.c    \
+    gstpluginloader.c     \
     gstpoll.c             \
     gstpreset.c           \
     gstquark.c            \
     gstquery.c            \
     gstregistry.c         \
+    gstregistrybinary.c   \
+    gstregistrychunks.c   \
     gstsegment.c          \
     gststructure.c        \
     gstsystemclock.c      \
     gsttaglist.c          \
     gsttagsetter.c        \
     gsttask.c             \
-    $(GST_TRACE_SRC)      \
+    gsttaskpool.c         \
     gsttypefind.c         \
     gsttypefindfactory.c  \
     $(GST_URI_SRC)        \
     gstutils.c            \
     gstvalue.c            \
     gstparse.c            \
-    $(GST_REGISTRY_SRC)   \
     ./android/gst/gstenumtypes.c        \
     ./android/gst/gstmarshal.c          \
     ./android/gst/parse/grammar.tab.c   \

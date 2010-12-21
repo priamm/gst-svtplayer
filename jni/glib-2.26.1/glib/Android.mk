@@ -9,12 +9,15 @@ LOCAL_SRC_FILES := \
     gatomic.c       \
     gbacktrace.c    \
     gbase64.c       \
+    gbitlock.c      \
     gbookmarkfile.c \
+    gbuffer.c       \
     gcache.c        \
     gcompletion.c   \
     gconvert.c      \
     gdataset.c      \
     gdate.c         \
+    gdatetime.c     \
     gdir.c          \
     gerror.c        \
     gfileutils.c    \
@@ -31,6 +34,7 @@ LOCAL_SRC_FILES := \
     gnode.c         \
     goption.c       \
     gpattern.c      \
+    gpoll.c         \
     gprimes.c       \
     gqsort.c        \
     gqueue.c        \
@@ -44,6 +48,7 @@ LOCAL_SRC_FILES := \
     gstdio.c        \
     gstrfuncs.c     \
     gstring.c       \
+    gtestutils.c    \
     gthread.c       \
     gthreadpool.c   \
     gtimer.c        \
@@ -56,12 +61,17 @@ LOCAL_SRC_FILES := \
     gutils.c        \
     gprintf.c       \
     giounix.c       \
-    gspawn.c
+    gspawn.c        \
+    gtimezone.c     \
+    gvariant.c            \
+    gvariant-core.c       \
+    gvarianttype.c        \
+    gvarianttypeinfo.c    \
+    gvariant-serialiser.c \
+    gvariant-parser.c
 
 LOCAL_MODULE := glib-2.0
 LOCAL_EXPORT_C_INCLUDES := $(GLIB_TOP) $(GLIB_TOP)/glib
-
-LOCAL_SHARED_LIBRARIES := gthread-2.0
 
 LOCAL_CFLAGS := \
     -I$(GLIB_TOP)			\

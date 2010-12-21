@@ -75,10 +75,10 @@
 
 
 /* --- functions --- */
-static gchar*
+static const gchar*
 fetch_dlerror (gboolean replace_null)
 {
-  gchar *msg = dlerror ();
+  const gchar *msg = dlerror ();
 
   /* make sure we always return an error message != NULL, if
    * expected to do so. */
@@ -141,7 +141,7 @@ _g_module_symbol (gpointer     handle,
 		  const gchar *symbol_name)
 {
   gpointer p;
-  gchar *msg;
+  const gchar *msg;
 
   fetch_dlerror (FALSE);
   p = dlsym (handle, symbol_name);

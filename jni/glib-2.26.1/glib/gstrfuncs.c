@@ -431,7 +431,7 @@ g_ascii_strtod (const gchar *nptr,
 {
   gchar *fail_pos;
   gdouble val;
-  struct lconv *locale_data;
+  /* struct lconv *locale_data; */
   const char *decimal_point;
   int decimal_point_len;
   const char *p, *decimal_point_pos;
@@ -442,8 +442,8 @@ g_ascii_strtod (const gchar *nptr,
 
   fail_pos = NULL;
 
-  locale_data = localeconv ();
-  decimal_point = locale_data->decimal_point;
+  /* locale_data = localeconv (); */
+  decimal_point = "."; /* locale_data->decimal_point; */
   decimal_point_len = strlen (decimal_point);
 
   g_assert (decimal_point_len != 0);
@@ -625,7 +625,7 @@ g_ascii_formatd (gchar       *buffer,
                  const gchar *format,
                  gdouble      d)
 {
-  struct lconv *locale_data;
+  /* struct lconv *locale_data; */
   const char *decimal_point;
   int decimal_point_len;
   gchar *p;
@@ -656,8 +656,8 @@ g_ascii_formatd (gchar       *buffer,
 
   _g_snprintf (buffer, buf_len, format, d);
 
-  locale_data = localeconv ();
-  decimal_point = locale_data->decimal_point;
+  /* locale_data = localeconv (); */
+  decimal_point = "."; /* locale_data->decimal_point; */
   decimal_point_len = strlen (decimal_point);
 
   g_assert (decimal_point_len != 0);

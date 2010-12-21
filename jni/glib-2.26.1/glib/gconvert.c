@@ -23,9 +23,12 @@
 #include "config.h"
 #include "glibconfig.h"
 
+#ifdef USE_LIBICONV_GNU
 #ifndef G_OS_WIN32
 #include <iconv.h>
 #endif
+#endif
+
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -51,20 +54,23 @@
 #include "gthreadprivate.h"
 #include "gunicode.h"
 
+#ifdef USE_LIBICONV_GNU
 #ifdef NEED_ICONV_CACHE
 #include "glist.h"
 #include "ghash.h"
 #endif
+#endif
 
 #include "glibintl.h"
 
+#ifdef USE_LIBICONV_GNU
 #if defined(USE_LIBICONV_GNU) && !defined (_LIBICONV_H)
 #error GNU libiconv in use but included iconv.h not from libiconv
 #endif
 #if !defined(USE_LIBICONV_GNU) && defined (_LIBICONV_H)
 #error GNU libiconv not in use but included iconv.h is from libiconv
 #endif
-
+#endif
 
 /**
  * SECTION:conversions
@@ -199,6 +205,8 @@ g_convert_error_quark (void)
   return g_quark_from_static_string ("g_convert_error");
 }
 
+#ifdef USE_LIBICONV_GNU
+
 static gboolean
 try_conversion (const char *to_codeset,
 		const char *from_codeset,
@@ -232,6 +240,8 @@ try_to_aliases (const char **to_aliases,
   return FALSE;
 }
 
+#endif
+
 G_GNUC_INTERNAL extern const char ** 
 _g_charset_get_aliases (const char *canonical_name);
 
@@ -254,6 +264,8 @@ GIConv
 g_iconv_open (const gchar  *to_codeset,
 	      const gchar  *from_codeset)
 {
+#ifdef USE_LIBICONV_GNU
+
   iconv_t cd;
   
   if (!try_conversion (to_codeset, from_codeset, &cd))
@@ -282,6 +294,9 @@ g_iconv_open (const gchar  *to_codeset,
 
  out:
   return (cd == (iconv_t)-1) ? (GIConv)-1 : (GIConv)cd;
+#else
+  return (GIConv)-1;
+#endif
 }
 
 /**
@@ -308,9 +323,13 @@ g_iconv (GIConv   converter,
 	 gchar  **outbuf,
 	 gsize   *outbytes_left)
 {
+#ifdef USE_LIBICONV_GNU
   iconv_t cd = (iconv_t)converter;
 
   return iconv (cd, inbuf, inbytes_left, outbuf, outbytes_left);
+#else
+  return -1;
+#endif
 }
 
 /**
@@ -331,13 +350,18 @@ g_iconv (GIConv   converter,
 gint
 g_iconv_close (GIConv converter)
 {
+#ifdef USE_LIBICONV_GNU
   iconv_t cd = (iconv_t)converter;
 
   return iconv_close (cd);
+#else
+  return -1;
+#endif
 }
 
 
 #ifdef NEED_ICONV_CACHE
+#ifdef USE_LIBICONV_GNU
 
 #define ICONV_CACHE_SIZE   (16)
 
@@ -624,6 +648,7 @@ close_converter (GIConv converter)
   return 0;
 }
 
+#endif
 #else  /* !NEED_ICONV_CACHE */
 
 static GIConv
@@ -664,6 +689,7 @@ close_converter (GIConv cd)
 }
 
 #endif /* NEED_ICONV_CACHE */
+
 
 /**
  * g_convert_with_iconv:

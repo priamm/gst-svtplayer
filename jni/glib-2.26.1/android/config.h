@@ -25,10 +25,10 @@
 /* #undef ENABLE_GC_FRIENDLY_DEFAULT */
 
 /* always defined to indicate that i18n is enabled */
-#define ENABLE_NLS 1
+/* #define ENABLE_NLS 1 */
 
 /* include GRegex */
-#define ENABLE_REGEX /**/
+/* #define ENABLE_REGEX */
 
 /* Define the gettext package to be used */
 #define GETTEXT_PACKAGE "glib20"
@@ -43,7 +43,7 @@
 #define GLIB_INTERFACE_AGE 1
 
 /* Define the location where the catalogs will be installed */
-#define GLIB_LOCALE_DIR "/home/jlo/tools/eclair-toolchain/sysroot/usr/share/locale"
+#define GLIB_LOCALE_DIR ""
 
 /* Define to the GLIB major version */
 #define GLIB_MAJOR_VERSION 2
@@ -238,7 +238,7 @@
 #define HAVE_GMTIME_R 1
 
 /* define to use system printf */
-/* #undef HAVE_GOOD_PRINTF */
+#define HAVE_GOOD_PRINTF
 
 /* Define to 1 if you have the <grp.h> header file. */
 #define HAVE_GRP_H 1
@@ -608,7 +608,7 @@
 #define LT_OBJDIR ".libs/"
 
 /* Do we cache iconv descriptors */
-#define NEED_ICONV_CACHE 1
+/* #define NEED_ICONV_CACHE 0 */
 
 /* didn't find fd_set */
 /* #undef NO_FD_SET */
@@ -700,7 +700,7 @@
 #define STDC_HEADERS 1
 
 /* Using GNU libiconv */
-#define USE_LIBICONV_GNU 1
+/* #define USE_LIBICONV_GNU 1 */
 
 /* Using a native implementation of iconv in a separate library */
 /* #undef USE_LIBICONV_NATIVE */
