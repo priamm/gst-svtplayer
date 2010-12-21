@@ -5,6 +5,8 @@ include $(CLEAR_VARS)
 LOCAL_SHARED_LIBRARIES += glib-2.0 gthread-2.0
 LOCAL_MODULE    := svtplayer
 LOCAL_SRC_FILES := svtplayer.c
+LOCAL_CFLAGS    := -Werror
+LOCAL_LDLIBS    := -llog
 
 include $(BUILD_SHARED_LIBRARY)
 
