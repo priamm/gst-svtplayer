@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES:= \
+LOCAL_SRC_FILES := \
     gatomicarray.c          \
     gboxed.c                \
     genums.c                \
@@ -23,11 +23,8 @@ LOCAL_SRC_FILES:= \
 LOCAL_SHARED_LIBRARIES := glib-2.0 gthread-2.0
 LOCAL_MODULE := gobject-2.0
 
-LOCAL_CFLAGS :=          \
-  -I$(LOCAL_PATH)        \
-  -I$(GLIB_TOP)          \
-  -I$(GLIB_TOP)/android  \
-  -I$(GLIB_TOP)/glib
+LOCAL_CFLAGS := \
+	-I$(GLIB_TOP)/android
 
 LOCAL_CFLAGS += \
     -DG_LOG_DOMAIN=\"GLib-GObject\" \

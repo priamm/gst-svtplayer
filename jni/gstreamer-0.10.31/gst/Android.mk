@@ -2,14 +2,6 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-GST_INDEX_SRC :=      \
-    gstindex.c        \
-    gstindexfactory.c
-
-GST_URI_SRC := gsturi.c
-
-GST_MAJORMINOR := 0.10
-
 LOCAL_SRC_FILES :=        \
     gst.c                 \
     gstobject.c           \
@@ -29,7 +21,8 @@ LOCAL_SRC_FILES :=        \
     gstfilter.c           \
     gstformat.c           \
     gstghostpad.c         \
-    $(GST_INDEX_SRC)      \
+    gstindex.c            \
+    gstindexfactory.c     \
     gstinfo.c             \
     gstinterface.c        \
     gstiterator.c         \
@@ -47,7 +40,6 @@ LOCAL_SRC_FILES :=        \
     gstquark.c            \
     gstquery.c            \
     gstregistry.c         \
-    gstregistrybinary.c   \
     gstregistrychunks.c   \
     gstsegment.c          \
     gststructure.c        \
@@ -58,7 +50,7 @@ LOCAL_SRC_FILES :=        \
     gsttaskpool.c         \
     gsttypefind.c         \
     gsttypefindfactory.c  \
-    $(GST_URI_SRC)        \
+    gsturi.c              \
     gstutils.c            \
     gstvalue.c            \
     gstparse.c            \
@@ -73,8 +65,8 @@ LOCAL_STATIC_LIBRARIES :=  \
     gmodule-2.0            \
     gobject-2.0
 
-LOCAL_MODULE:= gstreamer-$(GST_MAJORMINOR)
-LOCAL_EXPORT_C_INCLUDES := $(GST_TOP) $(GST_TOP)/gst $(GST_TOP)/android
+LOCAL_MODULE := gstreamer-$(GST_MAJORMINOR)
+LOCAL_EXPORT_C_INCLUDES := $(GST_TOP) $(GST_TOP)/android $(GST_TOP)/gst $(GST_TOP)/gst/android
 
 LOCAL_CFLAGS :=                     \
   -I$(GST_TOP)/android              \

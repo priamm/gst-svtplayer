@@ -120,6 +120,7 @@
  * manually
  */
 /* #undef GST_DISABLE_REGISTRY */
+#define GST_DISABLE_REGISTRY
 
 /**
  * GST_DISABLE_XML:
