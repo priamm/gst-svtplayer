@@ -1,0 +1,9 @@
+This will perhaps be a usable player for SVT Play (Swedish Television). It depends on whether I get bored or run into huge problems.
+
+Planned main features:
+* Based on Gstreamer (compiled with Android NDK)
+* Fast downloading of streams for offline use
+* Live streaming of the (adaptive) hires Apple HTTP streams instead of lowres RTSP/RTP
+* Avoid using the buffering in OpenCore since it sucks
+
+We'll see what will come of it.
