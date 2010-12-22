@@ -5,8 +5,8 @@ dnl package name and package version
 AC_INIT([gstsvthelper],[0.0.1])
 
 dnl required versions of gstreamer and plugins-base
-GST_REQUIRED=0.10.31
-GSTPB_REQUIRED=0.10.31
+GST_REQUIRED=0.10.30
+GSTPB_REQUIRED=0.10.30
 
 AC_CONFIG_SRCDIR([src/gstsvthelper.c])
 dnl AC_CONFIG_HEADERS([config.h])
