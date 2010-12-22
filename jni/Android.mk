@@ -2,7 +2,9 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_SHARED_LIBRARIES += glib-2.0 gthread-2.0 gobject-2.0 gstreamer-0.10
+GST_MAJORMINOR := 0.10
+
+LOCAL_SHARED_LIBRARIES += glib-2.0 gthread-2.0 gobject-2.0 gstreamer-$(GST_MAJORMINOR)
 LOCAL_MODULE    := svtplayer
 LOCAL_SRC_FILES := svtplayer.c
 LOCAL_CFLAGS    := -Werror
