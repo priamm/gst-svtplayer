@@ -23,8 +23,8 @@ LOCAL_SRC_FILES := \
 LOCAL_SHARED_LIBRARIES := glib-2.0 gthread-2.0
 LOCAL_MODULE := gobject-2.0
 
-LOCAL_CFLAGS := \
-	-I$(GLIB_TOP)/android
+LOCAL_C_INCLUDES := \
+	  $(GLIB_TOP)/android
 
 LOCAL_CFLAGS += \
     -DG_LOG_DOMAIN=\"GLib-GObject\" \

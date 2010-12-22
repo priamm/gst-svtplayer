@@ -3,21 +3,9 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES :=     \
-  gstcapsfilter.c      \
-  gstelements.c        \
-  gstfakesink.c        \
-  gstfakesrc.c         \
-  gstfdsink.c          \
-  gstfdsrc.c           \
-  gstfilesink.c        \
-  gstfilesrc.c         \
-  gstidentity.c        \
-  gstmultiqueue.c      \
-  gstqueue.c           \
-  gstqueue2.c          \
-  gsttee.c             \
-  gsttypefindelement.c 
-  
+  gstaacparse.c        \
+  gstbaseparse.c       \
+  android/plugin.c
 
 LOCAL_SHARED_LIBRARIES :=          \
   libgstbase-$(GST_MAJORMINOR)     \
@@ -27,10 +15,10 @@ LOCAL_SHARED_LIBRARIES :=          \
   libgmodule-2.0                   \
   libgobject-2.0
 
-LOCAL_MODULE := gstcoreelements
+LOCAL_MODULE := gstaudioparsersbad
 
 LOCAL_C_INCLUDES := \
-  $(GST_TOP)/android
+  $(GST_PBAD_TOP)/android
 
 LOCAL_CFLAGS := \
   -DHAVE_CONFIG_H      

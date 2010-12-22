@@ -25,10 +25,11 @@ LOCAL_SHARED_LIBRARIES :=        \
 LOCAL_MODULE := gstbase-$(GST_MAJORMINOR)
 LOCAL_EXPORT_C_INCLUDES := $(GST_TOP)/libs
 
-LOCAL_CFLAGS := \
-    -I$(GST_TOP)/libs
+LOCAL_C_INCLUDES :=    \
+    $(GST_TOP)/android \
+    $(GST_TOP)/libs
 
-LOCAL_CFLAGS += \
+LOCAL_CFLAGS := \
     -DHAVE_CONFIG_H      
 
 include $(BUILD_SHARED_LIBRARY)

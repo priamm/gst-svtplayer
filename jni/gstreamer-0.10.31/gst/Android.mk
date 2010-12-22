@@ -66,18 +66,18 @@ LOCAL_STATIC_LIBRARIES :=  \
     gobject-2.0
 
 LOCAL_MODULE := gstreamer-$(GST_MAJORMINOR)
-LOCAL_EXPORT_C_INCLUDES := $(GST_TOP) $(GST_TOP)/android $(GST_TOP)/gst $(GST_TOP)/gst/android
+LOCAL_EXPORT_C_INCLUDES := $(GST_TOP) $(GST_TOP)/gst $(GST_TOP)/gst/android
 
-LOCAL_CFLAGS :=                     \
-  -I$(GST_TOP)/android              \
-  -I$(GST_TOP)                      \
-  -I$(GST_TOP)/gst                  \
-  -I$(LOCAL_PATH)/android           \
-  -I$(LOCAL_PATH)/android/gst       \
-  -I$(LOCAL_PATH)/android/gst/parse \
-  -I$(LOCAL_PATH)/parse
+LOCAL_C_INCLUDES :=                 \
+    $(GST_TOP)/android              \
+    $(GST_TOP)                      \
+    $(GST_TOP)/gst                  \
+    $(LOCAL_PATH)/android           \
+    $(LOCAL_PATH)/android/gst       \
+    $(LOCAL_PATH)/android/gst/parse \
+    $(LOCAL_PATH)/parse
 
-LOCAL_CFLAGS += \
+LOCAL_CFLAGS := \
     -D_GNU_SOURCE                                 \
     -DG_LOG_DOMAIN=g_log_domain_gstreamer         \
     -DGST_MAJORMINOR=\""$(GST_MAJORMINOR)"\"      \

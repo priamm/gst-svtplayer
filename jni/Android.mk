@@ -12,8 +12,10 @@ LOCAL_LDLIBS    := -llog
 
 include $(BUILD_SHARED_LIBRARY)
 
-GLIB_TOP := $(LOCAL_PATH)/glib-2.26.1
-GST_TOP  := $(LOCAL_PATH)/gstreamer-0.10.31
+GLIB_TOP      := $(LOCAL_PATH)/glib-2.26.1
+GST_TOP       := $(LOCAL_PATH)/gstreamer-0.10.31
+GST_PBAD_TOP  := $(LOCAL_PATH)/gst-plugins-bad-0.10.20
 
 include $(GLIB_TOP)/Android.mk
 include $(GST_TOP)/Android.mk
+include $(GST_PBAD_TOP)/Android.mk

@@ -73,12 +73,14 @@ LOCAL_SRC_FILES := \
 LOCAL_MODULE := glib-2.0
 LOCAL_EXPORT_C_INCLUDES := $(GLIB_TOP) $(GLIB_TOP)/glib
 
+LOCAL_C_INCLUDES :=           \
+     $(GLIB_TOP)              \
+     $(GLIB_TOP)/android      \
+     $(LOCAL_PATH)/libcharset \
+     $(LOCAL_PATH)/gnulibi    \
+     $(LOCAL_PATH)/pcre
+
 LOCAL_CFLAGS := \
-    -I$(GLIB_TOP)			\
-    -I$(GLIB_TOP)/android		\
-    -I$(LOCAL_PATH)/libcharset		\
-    -I$(LOCAL_PATH)/gnulibi		\
-    -I$(LOCAL_PATH)/pcre		\
     -DLIBDIR=\"$(libdir)\"          \
     -DHAVE_CONFIG_H                 \
     -DG_LOG_DOMAIN=\"GLib-GRegex\" \

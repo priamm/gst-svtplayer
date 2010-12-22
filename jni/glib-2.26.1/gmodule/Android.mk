@@ -8,9 +8,9 @@ LOCAL_SHARED_LIBRARIES := glib-2.0
 LOCAL_MODULE := gmodule-2.0
 LOCAL_EXPORT_C_INCLUDES := $(GLIB_TOP) $(GLIB_TOP)/glib $(GLIB_TOP)/gmodule
 
-LOCAL_CFLAGS := \
-	-I$(LOCAL_PATH)/android \
-	-I$(GLIB_TOP)/android
+LOCAL_C_INCLUDES :=        \
+	   $(LOCAL_PATH)/android \
+	   $(GLIB_TOP)/android
 
 LOCAL_CFLAGS += \
     -DG_LOG_DOMAIN=\"GModule\"  \
