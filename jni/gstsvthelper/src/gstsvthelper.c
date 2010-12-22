@@ -27,6 +27,14 @@ plugin_init (GstPlugin * plugin)
   return TRUE;
 }
 
+#ifndef VERSION
+#define VERSION "0.0"
+#endif
+
+#ifndef PACKAGE
+#define PACKAGE "gstsvthelper"
+#endif
+
 /* Define plugin */
 GST_PLUGIN_DEFINE (
     GST_VERSION_MAJOR,
