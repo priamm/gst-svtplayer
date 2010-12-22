@@ -1,6 +1,6 @@
 bin/
 obj/
 gen/
-lib/
+libs/
 local.properties
 build
