@@ -13,7 +13,7 @@ public class Native {
     private static String[] sLibs = {
             "glib-2.0", "gmodule-2.0", "gthread-2.0", "gobject-2.0", "gstreamer-0.10",
             "gstbase-0.10", "gstcontroller-0.10", "gstdataprotocol-0.10", "gstnet-0.10",
-            "gstcoreelements-0.10", "svtplayer"
+            "gstcoreelements", "svtplayer"
     };
 
     static synchronized void init(Context context) {

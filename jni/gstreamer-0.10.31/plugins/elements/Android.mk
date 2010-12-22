@@ -27,7 +27,7 @@ LOCAL_SHARED_LIBRARIES :=          \
   libgmodule-2.0                   \
   libgobject-2.0
 
-LOCAL_MODULE := gstcoreelements-$(GST_MAJORMINOR)
+LOCAL_MODULE := gstcoreelements
 
 LOCAL_C_INCLUDES :=
 

@@ -56,7 +56,7 @@ static void init(JNIEnv* env, jobject thiz, jstring dataPath) {
   if (dir == NULL) {
     g_error ("No dataPath");
   } else {
-    gchar *file = g_build_filename (dir, "libgstcoreelements-0.10.so", NULL);
+    gchar *file = g_build_filename (dir, "libgstcoreelements.so", NULL);
     plugin = gst_plugin_load_file (file, &err);
     if (plugin == NULL) {
       g_error ("Loading %s failed: %s", file, err->message);
