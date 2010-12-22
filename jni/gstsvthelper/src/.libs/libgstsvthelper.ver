@@ -1,0 +1,6 @@
+{ global:
+gst_aac_filter_get_type;
+gst_h264_filter_get_type;
+gst_plugin_desc;
+gst_svthelper_debug;
+local: *; };
