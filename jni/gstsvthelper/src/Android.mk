@@ -7,12 +7,12 @@ LOCAL_SRC_FILES :=     \
   gsth264filter.c      \
   gstaacfilter.c
 
-LOCAL_SHARED_LIBRARIES :=          \
-  libgstreamer-$(GST_MAJORMINOR)   \
-  libglib-2.0                      \
-  libgthread-2.0                   \
-  libgmodule-2.0                   \
-  libgobject-2.0
+LOCAL_SHARED_LIBRARIES :=       \
+  gstreamer-$(GST_MAJORMINOR)   \
+  glib-2.0                      \
+  gthread-2.0                   \
+  gmodule-2.0                   \
+  gobject-2.0
 
 LOCAL_MODULE := gstsvthelper
 

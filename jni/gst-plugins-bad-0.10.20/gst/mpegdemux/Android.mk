@@ -13,13 +13,13 @@ LOCAL_SRC_FILES :=       \
   android/flumpegdemux.c
 
 LOCAL_SHARED_LIBRARIES :=          \
-  libgstbase-$(GST_MAJORMINOR)     \
-  libgstreamer-$(GST_MAJORMINOR)   \
-  libgsttag-$(GST_MAJORMINOR)      \
-  libglib-2.0                      \
-  libgthread-2.0                   \
-  libgmodule-2.0                   \
-  libgobject-2.0
+  gstbase-$(GST_MAJORMINOR)     \
+  gstreamer-$(GST_MAJORMINOR)   \
+  gsttag-$(GST_MAJORMINOR)      \
+  glib-2.0                      \
+  gthread-2.0                   \
+  gmodule-2.0                   \
+  gobject-2.0
 
 LOCAL_MODULE := gstmpegdemux
 
