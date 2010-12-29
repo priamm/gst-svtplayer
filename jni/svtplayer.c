@@ -129,8 +129,7 @@ static void gst_log(GstDebugCategory * category, GstDebugLevel level,
 }
 
 /* JNI init */
-// TODO: Look up NELEM in Android source
-#define NUM_NATIVE_METHODS 2
+#define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
 static JNINativeMethod native_methods[] = { { "test", "()V", &test }, {
     "init_native", "(Ljava/lang/String;)V", &init } };
 
@@ -146,7 +145,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   }
   native_class = (*env)->FindClass (env, "foss/jonasl/svtplayer/Native");
   reg_res = (*env)->RegisterNatives (env, native_class, &native_methods[0],
-      (jint) NUM_NATIVE_METHODS);
+      (jint) NELEM (native_methods));
   LOGD ("RegisterNatives result %i", reg_res);
   LOGD ("Path is %s", getcwd(NULL, 0));
   return JNI_VERSION_1_6;
