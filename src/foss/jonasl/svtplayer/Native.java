@@ -4,7 +4,6 @@ package foss.jonasl.svtplayer;
 import java.io.File;
 
 import android.content.Context;
-import android.util.Log;
 
 public class Native {
 
@@ -19,17 +18,16 @@ public class Native {
     static synchronized void init(Context context) {
         if (!sInitialized) {
             for (String lib : sLibs) {
-                Log.d(Main.TAG, "Loading " + lib);
                 System.loadLibrary(lib);
             }
             String dataPath = new File(context.getFilesDir().getParentFile(), "lib")
                     .getAbsolutePath();
-            Log.d(Main.TAG, "calling init_native with path: " + dataPath);
             init_native(dataPath);
             sInitialized = true;
         }
     }
 
     static native void init_native(String dataPath);
+
     static native void test();
 }
