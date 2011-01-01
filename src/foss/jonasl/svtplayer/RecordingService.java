@@ -15,6 +15,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 
 import foss.jonasl.svtplayer.M3U8.M3U8Entry;
 
@@ -23,6 +24,7 @@ import android.content.Intent;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class RecordingService extends IntentService {
 
@@ -152,9 +154,6 @@ public class RecordingService extends IntentService {
                     }
                 }
             } while (again);
-            if (i > 10) {
-                //break;
-            }
         }
         stat.stop();
     }
@@ -178,9 +177,54 @@ public class RecordingService extends IntentService {
             throws ClientProtocolException, IOException {
         BufferedOutputStream outStream = null;
         try {
+            boolean append = false;
+            long length = -1;
+            try {
+                append = target.exists();
+                length = target.length();
+            } catch (Exception e) {
+                L.d("could not access " + target + " : " + e.getMessage());
+                return false;
+            }
+
             HttpGet request = new HttpGet();
+            HttpResponse response;
+            if (append) {
+                HttpHead head = new HttpHead();
+                head.setURI(uri);
+                response = Utils.getHttpClient().execute(head);
+                if (response.containsHeader("Content-Length")) {
+                    int contentLenght = Integer.valueOf(response.getFirstHeader("Content-Length")
+                            .getValue());
+                    if (length < contentLenght) {
+                        request.addHeader("Range", "bytes=" + length + "-"
+                                + String.valueOf(contentLenght - 1));
+                    } else if (length == contentLenght) {
+                        L.d("size matches, skipping");
+                        return true;
+                    } else {
+                        L.d("local file too big, downloading again");
+                        append = false;
+                    }
+                } else {
+                    L.d("HEAD has no Content-Length");
+                    append = false;
+                }
+            }
             request.setURI(uri);
-            HttpResponse response = Utils.getHttpClient().execute(request);
+            response = Utils.getHttpClient().execute(request);
+            if (append && response.getStatusLine().getStatusCode() != 206) {
+                L.d("expected partial content 206 but got "
+                        + response.getStatusLine().getStatusCode() + ", deleting file and throw");
+                try {
+                    target.delete();
+                } catch (Exception e) {
+                    L.d("could not access " + target + " : " + e.getMessage());
+                    return false;
+                }
+                throw new IOException("expected partial content 206 but got "
+                        + response.getStatusLine().getStatusCode());
+            }
 
             HttpEntity entity = response.getEntity();
             if (entity == null) {
@@ -192,28 +236,13 @@ public class RecordingService extends IntentService {
             }
             long contentLength = entity.getContentLength();
             if (contentLength > 0) {
-                boolean exists = false;
-                long length = -1;
-                try {
-                    exists = target.exists();
-                    length = target.length();
-                } catch (Exception e) {
-                    L.d("could not access " + target + " : " + e.getMessage());
+                if (getFreeBytes() < 2 * contentLength) {
+                    L.d("not enough space");
                     return false;
-                }
-                if (exists && length == contentLength) {
-                    L.d("exists with same size, skipping: " + target);
-                    inStream.close();
-                    return true;
-                } else {
-                    if (getFreeBytes() < 2 * contentLength) {
-                        L.d("not enough space");
-                        return false;
-                    }
                 }
             }
             try {
-                outStream = new BufferedOutputStream(new FileOutputStream(target), 8192);
+                outStream = new BufferedOutputStream(new FileOutputStream(target, append), 8192);
             } catch (Exception e) {
                 L.d("could not access " + target + " : " + e.getMessage());
                 return false;
@@ -294,6 +323,7 @@ public class RecordingService extends IntentService {
                 mTimer.cancel();
                 mTimer = null;
             }
+            // TODO: Don't use interval in stop calcs
             tick();
         }
 
