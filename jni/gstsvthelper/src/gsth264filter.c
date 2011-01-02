@@ -21,7 +21,8 @@ GST_BOILERPLATE (GstH264Filter, gst_h264_filter, GstElement, GST_TYPE_ELEMENT);
 static void gst_h264_filter_finalize (GObject * obj);
 static gboolean gst_h264_filter_set_caps (GstPad * pad, GstCaps * caps);
 static GstFlowReturn gst_h264_filter_chain (GstPad * pad, GstBuffer * buf);
-
+static GstStateChangeReturn gst_h264_filter_change_state (GstElement * element,
+    GstStateChange transition);
 
 static void
 gst_h264_filter_base_init (gpointer gclass)
@@ -44,9 +45,13 @@ static void
 gst_h264_filter_class_init (GstH264FilterClass * klass)
 {
   GObjectClass *gobject_class;
+  GstElementClass *gstelement_class;
 
   gobject_class = (GObjectClass *) klass;
   gobject_class->finalize = GST_DEBUG_FUNCPTR (gst_h264_filter_finalize);
+
+  gstelement_class = (GstElementClass *) klass;
+  gstelement_class->change_state = gst_h264_filter_change_state;
 }
 
 static void
@@ -88,6 +93,24 @@ gst_h264_filter_finalize (GObject * obj)
   G_OBJECT_CLASS (parent_class)->finalize (obj);
 }
 
+static GstStateChangeReturn
+gst_h264_filter_change_state (GstElement * element, GstStateChange transition)
+{
+  GstH264Filter *self;
+
+  self = GST_H264_FILTER (element);
+
+  switch (transition) {
+    case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
+      self->last_time = GST_CLOCK_TIME_NONE;
+      break;
+    default:
+      break;
+  }
+
+  return GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
+}
+  
 static gboolean
 gst_h264_filter_set_caps (GstPad * pad, GstCaps * caps)
 {
@@ -146,6 +169,16 @@ gst_h264_filter_chain (GstPad * pad, GstBuffer * buf)
   GstFlowReturn ret;
 
   self = GST_H264_FILTER (GST_PAD_PARENT (pad));
+
+  if (G_UNLIKELY (self->last_time != GST_CLOCK_TIME_NONE && 
+      GST_BUFFER_TIMESTAMP (buf) < self->last_time)) {
+    GST_INFO_OBJECT (self, "dropping buffer, %" GST_TIME_FORMAT " < %"
+        GST_TIME_FORMAT, GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)),
+        GST_TIME_ARGS (self->last_time));
+    return GST_FLOW_OK;
+  }
+
+  self->last_time = GST_BUFFER_TIMESTAMP (buf);
 
   if (G_UNLIKELY (!self->caps_ok)) {
     if (G_UNLIKELY (self->list == NULL)) {

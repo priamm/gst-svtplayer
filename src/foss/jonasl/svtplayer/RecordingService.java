@@ -21,10 +21,12 @@ import foss.jonasl.svtplayer.M3U8.M3U8Entry;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class RecordingService extends IntentService {
 
@@ -53,8 +55,8 @@ public class RecordingService extends IntentService {
             return;
         }
         File ownDir = new File(Environment.getExternalStorageDirectory(), "svtplayer");
-        File tmpDir = new File(ownDir, ".tmp");
-        File workDir = new File(tmpDir, String.valueOf(id));
+        File recDir = new File(ownDir, ".rec");
+        File workDir = new File(recDir, String.valueOf(id));
         workDir.mkdirs();
         if (!workDir.exists()) {
             L.d("can't create workDir");
@@ -130,7 +132,7 @@ public class RecordingService extends IntentService {
                         .format("%d_%07d.ts", toUse.getBandwidth(), i));
                 L.d("DL: " + entry.getUri() + " -> " + target);
                 try {
-                    if (!downloadFile(stat, entry.getUri(), target)) {
+                    if (!downloadFile(entry.getUri(), target, stat)) {
                         L.d("aborting, local write failed");
                         return;
                     }
@@ -156,6 +158,26 @@ public class RecordingService extends IntentService {
             } while (again);
         }
         stat.stop();
+
+        String input = new File(workDir, String.valueOf(toUse.getBandwidth()) + "_%07d.ts")
+                .getAbsolutePath();
+        File outputFile = new File(ownDir, id + ".mp4");
+        if (outputFile.exists()) {
+            int cnt = 2;
+            do {
+                outputFile = new File(ownDir, id + "-" + cnt + ".mp4");
+                cnt++;
+            } while (outputFile.exists());
+        }
+        String pipeline = getTSPartsToMP4Pipeline(input, outputFile.getAbsolutePath());
+        L.d("running: " + pipeline);
+        boolean pipelineRes = Native.runPipeline(pipeline);
+        L.d("result: " + pipelineRes);
+        DummyScannerClient client = new DummyScannerClient(
+                outputFile.getAbsolutePath()); 
+        MediaScannerConnection connection = new MediaScannerConnection(this, client);
+        client.setConnection(connection);
+        connection.connect();
     }
 
     private void cleanUpDir(File dir) {
@@ -173,7 +195,7 @@ public class RecordingService extends IntentService {
         }
     }
 
-    private boolean downloadFile(StatKeeper stat, URI uri, File target)
+    private boolean downloadFile(URI uri, File target, StatKeeper stat)
             throws ClientProtocolException, IOException {
         BufferedOutputStream outStream = null;
         try {
@@ -252,7 +274,9 @@ public class RecordingService extends IntentService {
             while ((read = inStream.read(buf)) != -1) {
                 try {
                     outStream.write(buf, 0, read);
-                    stat.deliverBytes(read);
+                    if (stat != null) {
+                        stat.deliverBytes(read);
+                    }
                 } catch (Exception e) {
                     L.d("could not write to " + target + " : " + e.getMessage());
                     return false;
@@ -270,6 +294,18 @@ public class RecordingService extends IntentService {
                 }
             }
         }
+    }
+
+    public static String getTSPartsToMP4Pipeline(String input, String output) {
+        L.d("input: " + input);
+        L.d("output: " + output);
+        StringBuilder b = new StringBuilder();
+        b.append("mp4mux name=muxer ! filesink location=").append(output).append(
+                " multifilesrc location=").append(input).append(" ! mpegtsdemux name=demuxer")
+                .append(" demuxer. ! queue ! aacparse ! aacfilter ! muxer.audio_00").append(
+                        " demuxer. ! queue ! h264parse output-format=0 access-unit=true").append(
+                        " ! h264filter ! muxer.video_00");
+        return b.toString();
     }
 
     private int getFreeBytes() {
@@ -290,6 +326,7 @@ public class RecordingService extends IntentService {
         private long mAccBytes;
         private int mSecs;
         private int mAccSecs;
+        private long mStartTime;
 
         public StatKeeper(int id, int interval, int duration, long length) {
             mId = id;
@@ -312,9 +349,10 @@ public class RecordingService extends IntentService {
                 mTimer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
-                        tick();
+                        tick(true);
                     }
                 }, mInterval * 1000, mInterval * 1000);
+                mStartTime = SystemClock.elapsedRealtime();
             }
         }
 
@@ -323,8 +361,7 @@ public class RecordingService extends IntentService {
                 mTimer.cancel();
                 mTimer = null;
             }
-            // TODO: Don't use interval in stop calcs
-            tick();
+            tick(false);
         }
 
         public void deliverBytes(int bytes) {
@@ -337,8 +374,17 @@ public class RecordingService extends IntentService {
             mAccSecs += secs;
         }
 
-        private synchronized void tick() {
-            long bytesPerSecond = mBytes / mInterval;
+        private synchronized void tick(boolean fromTimer) {
+            long bytesPerSecond;
+            if (fromTimer) {
+                bytesPerSecond = mBytes / mInterval;
+            } else {
+                long period = (SystemClock.elapsedRealtime() - mStartTime) / 1000;
+                if (period == 0) {
+                    period = 1;
+                }
+                bytesPerSecond = mAccBytes / period;
+            }
             long kiloBytesPerSecond = bytesPerSecond / 1024;
             int progress = -1;
             if (mLength > 0) {
@@ -351,5 +397,33 @@ public class RecordingService extends IntentService {
                     + (progress >= 0 ? String.valueOf(progress) : "unknown"));
             mBytes = 0;
         }
+    }
+
+    private class DummyScannerClient implements MediaScannerConnection.MediaScannerConnectionClient {
+
+        private String mPath;
+        private MediaScannerConnection mConnection;
+
+        public DummyScannerClient(String path) {
+            mPath = path;
+        }
+
+        public void setConnection(MediaScannerConnection connection) {
+            mConnection = connection;
+        }
+
+        @Override
+        public void onMediaScannerConnected() {
+            L.d("onMediaScannerConnected");
+            if (mConnection != null && mPath != null) {
+                mConnection.scanFile(mPath, null);
+            }
+        }
+
+        @Override
+        public void onScanCompleted(String path, Uri uri) {
+            L.d("onScanCompleted " + path + " " + uri);
+        }
+
     }
 }

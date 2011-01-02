@@ -27,6 +27,7 @@ struct _GstH264Filter
   GstBufferList *list;
   GstBufferListIterator *inserter;
   gboolean  caps_ok;
+  GstClockTime last_time;
 };
 
 struct _GstH264FilterClass 
