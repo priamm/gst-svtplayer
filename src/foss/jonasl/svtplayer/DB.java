@@ -164,6 +164,7 @@ public class DB {
         b.append(" state: " + getPVRStateName(cur.getInt(cur.getColumnIndexOrThrow(DB.PVR_STATE))));
         b.append(" rate: " + cur.getString(cur.getColumnIndexOrThrow(DB.PVR_RATE)));
         b.append(" progress: " + cur.getString(cur.getColumnIndexOrThrow(DB.PVR_PROGRESS)));
+        cur.close();
         L.d (b.toString());
     }
 

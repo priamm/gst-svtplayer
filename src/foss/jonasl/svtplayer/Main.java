@@ -18,8 +18,8 @@ public class Main extends Activity {
         DB
                 .instance()
                 .pvrInsert(
-                        "http://www0.c90910.dna.qbrick.com/90910/od/20110101/nyh-POkarriar1930-hts-a-v1/nyh-POkarriar1930-hts-a-v1_vod.m3u8",
-                        "brand", new Date().getTime(), 0, 0, 0, 0);
+                        "http://www0.c90910.dna.qbrick.com/90910/od/20110102/11141153-0102RAPPORT1930-PLAY-hts-a-v1/11141153-0102RAPPORT1930-PLAY-hts-a-v1_vod.m3u8",
+                        "rapport", new Date().getTime(), 0, 0, 0, 0);
         Intent i = new Intent(this, PVRService.class);
         startService(i);
     }
