@@ -2,11 +2,11 @@ package foss.jonasl.svtplayer;
 
 import android.util.Log;
 
-class L {
+public class L {
 
-    static final String TAG = "svtplayer";
+    public static final String TAG = "svtplayer";
 
-    static void d (String msg) {
+    public static void d (String msg) {
         Log.d(TAG, msg);
     }
 }

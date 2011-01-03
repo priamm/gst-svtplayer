@@ -13,6 +13,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 
+import foss.jonasl.svtplayer.utils.Http;
+
 import android.text.TextUtils;
 
 public class M3U8 {
@@ -57,7 +59,7 @@ public class M3U8 {
         try {
             HttpGet request = new HttpGet();
             request.setURI(mUri);
-            HttpResponse response = Utils.getHttpClient().execute(request);
+            HttpResponse response = Http.getClient().execute(request);
 
             HttpEntity entity = response.getEntity();
             if (entity == null) {
@@ -77,7 +79,6 @@ public class M3U8 {
                     continue;
                 }
 
-                L.d("line:" + line);
                 if (line.startsWith(EX_PREFIX)) {
                     if (firstLine) {
                         checkFirstLine(line);
@@ -95,7 +96,7 @@ public class M3U8 {
                         isStreamInf = true;
                         bandwidth = parseBandwidth(line);
                     } else {
-                        L.d("ignore:" + line);
+                        // Ignore line
                     }
                 } else if (line.startsWith(COMMENT_PREFIX)) {
                     // Nothing
@@ -112,7 +113,6 @@ public class M3U8 {
                         M3U8 variant = new M3U8(mediaUri);
                         variant.mBandwidth = bandwidth;
                         mVariants.add(variant);
-                        L.d("variant: " + bandwidth + " " + mediaUri);
                         isStreamInf = false;
                     } else {
                         if (mEntries == null) {
@@ -120,7 +120,6 @@ public class M3U8 {
                         }
                         M3U8Entry entry = new M3U8Entry(mediaUri, duration, mediaSequenceNumber);
                         mEntries.add(entry);
-                        L.d("media:" + mediaSequenceNumber + " " + duration + " " + mediaUri);
                         duration = -1;
                         if (mediaSequenceNumber >= 0) {
                             mediaSequenceNumber++;
@@ -236,7 +235,7 @@ public class M3U8 {
         return res;
     }
 
-    public class M3U8Entry {
+    public static class M3U8Entry {
         private URI mUri;
         private int mDuration;
         private int mMediaSequenceNumber;

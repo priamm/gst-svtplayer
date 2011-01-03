@@ -48,7 +48,7 @@ public class Native {
 
     static native void initNative();
 
-    static native boolean loadPlugin(String path);
+    private static native boolean loadPlugin(String path);
 
-    static native boolean runPipeline(String pipeline);
+    public static native boolean runPipeline(String pipeline);
 }
