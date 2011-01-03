@@ -91,4 +91,8 @@ public class StatKeeper implements IDownloadStats {
         mDb.pvrUpdateRateProgress(mId, kiloBytesPerSecond, progress);
         mBytes = 0;
     }
+
+    public void setLength (int length) {
+      // Ignore
+    }
 }

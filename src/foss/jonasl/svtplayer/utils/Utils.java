@@ -27,7 +27,7 @@ public class Utils {
             for (String file : dir.list()) {
                 File tmp = new File(dir, file);
                 res = tmp.delete();
-                L.d((res ? "deleted " : "failed to delete ") + file);
+                L.d((res ? "deleted " : "failed to delete ") + tmp);
             }
             res = dir.delete();
             L.d((res ? "deleted " : "failed to delete ") + dir);
@@ -60,6 +60,7 @@ public class Utils {
     }
 
     public static void invokeMediaScanner(Context context, File file) {
+        L.d("invokeMediaScanner " + file.getAbsolutePath());
         SimpleScannerClient client = new SimpleScannerClient(file.getAbsolutePath());
         MediaScannerConnection connection = new MediaScannerConnection(context, client);
         client.setConnection(connection);

@@ -17,7 +17,7 @@ public class Native {
     };
 
     private static String[] sPlugins = {
-            "libgstcoreelements.so", "libgstmultifile.so", "libgstaudioparsersbad.so",
+            "libgstcoreelements.so", "libgstaudioparsersbad.so",
             "libgsth264parse.so", "libgstmpegdemux.so", "libgstqtmux.so", "libgstsvthelper.so"
     };
 

@@ -31,11 +31,12 @@ public class DB {
     public static final int PVR_STATE_ERROR_FATAL = -3;
     public static final int PVR_STATE_ERROR_SPACE = -2;
     public static final int PVR_STATE_ERROR_RETRYING = -1;
-    public static final int PVR_STATE_PENDING = 0;
+    public static final int PVR_STATE_PAUSED = 0;
     public static final int PVR_STATE_PAUSING = 1;
-    public static final int PVR_STATE_PAUSED = 2;
+    public static final int PVR_STATE_PENDING = 2;    
     public static final int PVR_STATE_RECORDING = 3;
     public static final int PVR_STATE_REMUXING = 4;
+    public static final int PVR_STATE_DELETED = 99;
 
     private static DB sInstance = null;
 

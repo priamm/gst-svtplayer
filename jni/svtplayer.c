@@ -21,7 +21,7 @@ svtp_init (JNIEnv *env, jobject thiz)
       | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_WARNING | G_LOG_LEVEL_ERROR
       | G_LOG_FLAG_FATAL, svtp_glib_log, NULL);
 
-  gst_debug_set_default_threshold (GST_LEVEL_INFO);
+  gst_debug_set_default_threshold (GST_LEVEL_ERROR);
   gst_init (NULL, NULL);
   gst_debug_remove_log_function (gst_debug_log_default);
   gst_debug_add_log_function (svtp_gst_log, NULL);
