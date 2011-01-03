@@ -22,6 +22,7 @@
 #endif
 
 #include "gstrtpdepay.h"
+/*
 #include "gstrtpac3depay.h"
 #include "gstrtpbvdepay.h"
 #include "gstrtpbvpay.h"
@@ -57,7 +58,9 @@
 #include "gstrtph263depay.h"
 #include "gstrtph263pay.h"
 #include "gstrtph264depay.h"
+*/
 #include "gstrtph264pay.h"
+/*
 #include "gstrtpj2kdepay.h"
 #include "gstrtpj2kpay.h"
 #include "gstrtpjpegdepay.h"
@@ -71,7 +74,9 @@
 #include "gstrtpmp4vdepay.h"
 #include "gstrtpmp4vpay.h"
 #include "gstrtpmp4adepay.h"
+*/
 #include "gstrtpmp4apay.h"
+/*
 #include "gstrtpmp4gdepay.h"
 #include "gstrtpmp4gpay.h"
 #include "gstrtpqcelpdepay.h"
@@ -87,13 +92,14 @@
 #include "gstrtpvorbispay.h"
 #include "gstrtpvrawdepay.h"
 #include "gstrtpvrawpay.h"
+*/
 
 static gboolean
 plugin_init (GstPlugin * plugin)
 {
   if (!gst_rtp_depay_plugin_init (plugin))
     return FALSE;
-
+/*
   if (!gst_rtp_ac3_depay_plugin_init (plugin))
     return FALSE;
 
@@ -198,10 +204,10 @@ plugin_init (GstPlugin * plugin)
 
   if (!gst_rtp_h264_depay_plugin_init (plugin))
     return FALSE;
-
+*/
   if (!gst_rtp_h264_pay_plugin_init (plugin))
     return FALSE;
-
+/*
   if (!gst_rtp_j2k_depay_plugin_init (plugin))
     return FALSE;
 
@@ -237,10 +243,10 @@ plugin_init (GstPlugin * plugin)
 
   if (!gst_rtp_mp4v_depay_plugin_init (plugin))
     return FALSE;
-
+*/
   if (!gst_rtp_mp4a_pay_plugin_init (plugin))
     return FALSE;
-
+/*
   if (!gst_rtp_mp4a_depay_plugin_init (plugin))
     return FALSE;
 
@@ -288,7 +294,7 @@ plugin_init (GstPlugin * plugin)
 
   if (!gst_rtp_vraw_pay_plugin_init (plugin))
     return FALSE;
-
+*/
   return TRUE;
 }
 
