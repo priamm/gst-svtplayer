@@ -88,7 +88,6 @@ public class Http {
       }
       request.setURI(uri);
       response = Http.getClient().execute(request);
-      // TODO: Determine total length and position and pass to stat
       int totalLength = -1;
       if (append) {
         if (response.getStatusLine().getStatusCode() == 206) {
