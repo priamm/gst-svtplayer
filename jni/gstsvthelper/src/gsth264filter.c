@@ -170,6 +170,7 @@ gst_h264_filter_chain (GstPad * pad, GstBuffer * buf)
 
   self = GST_H264_FILTER (GST_PAD_PARENT (pad));
 
+  // TODO: Property
   if (G_UNLIKELY (self->last_time != GST_CLOCK_TIME_NONE && 
       GST_BUFFER_TIMESTAMP (buf) < self->last_time)) {
     GST_INFO_OBJECT (self, "dropping buffer, %" GST_TIME_FORMAT " < %"
@@ -225,14 +226,14 @@ gst_h264_filter_chain (GstPad * pad, GstBuffer * buf)
       GST_DEBUG_OBJECT (self, "%u saved buffers processed", cnt);
     }
 
-    GST_WARNING_OBJECT (self, "setting caps");
+    GST_LOG_OBJECT (self, "setting caps");
     gst_buffer_set_caps (buf, GST_PAD_CAPS (self->srcpad));
-    GST_WARNING_OBJECT (self, "pushing buffer");
+    GST_LOG_OBJECT (self, "pushing buffer");
     ret = gst_pad_push (self->srcpad, buf);
     if (G_LIKELY (ret == GST_FLOW_OK)) {
-      GST_WARNING_OBJECT (self, "buffer pushed ok");
+      GST_LOG_OBJECT (self, "buffer pushed ok");
     } else {
-      GST_WARNING_OBJECT (self, "buffer push failed");
+      GST_LOG_OBJECT (self, "buffer push failed");
     }
   }
 
