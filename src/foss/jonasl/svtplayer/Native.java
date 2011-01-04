@@ -18,13 +18,13 @@ public class Native {
 
   private static String[] sLibs = { "glib-2.0", "gmodule-2.0", "gthread-2.0",
       "gobject-2.0", "gstreamer-0.10", "gstbase-0.10", "gstcontroller-0.10",
-      "gstdataprotocol-0.10", "gstnet-0.10", "gsttag-0.10",
+      "gstdataprotocol-0.10", "gstnet-0.10", "gstnetbuffer-0.10", "gsttag-0.10",
       "gstapp-0.10", "gstaudio-0.10", "gstrtp-0.10", "gstrtsp-0.10",
       "gstsdp-0.10", "gstrtspserver-0.10", "svtplayer" };
 
   private static String[] sPlugins = { "libgstcoreelements.so",
       "libgstaudioparsersbad.so", "libgsth264parse.so", "libgstmpegdemux.so",
-      "libgstqtmux.so", "libgstrtp.so", "libgstsvthelper.so" };
+      "libgstqtmux.so", "libgstrtp.so", "libgstrtpmanager.so", "libgstsvthelper.so" };
  
   static synchronized void init(Context context) {
     if (sInitialized) {
@@ -33,7 +33,8 @@ public class Native {
     for (String lib : sLibs) {
       System.loadLibrary(lib);
     }
-    initNative(GST_LEVEL_ERROR);
+    initNative(GST_LEVEL_INFO);
+
 
     String dataPath;
     try {
@@ -57,4 +58,5 @@ public class Native {
   private static native boolean loadPlugin(String path);
 
   public static native boolean runPipeline(String pipeline);
+  public static native void runRtspServer(String pipeline);
 }

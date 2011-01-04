@@ -4,6 +4,7 @@
 
 #include <glib.h>
 #include <gst/gst.h>
+#include <gst/rtsp-server/rtsp-server.h>
 
 #include "logging.h"
 #include "svtplayer.h"
@@ -112,6 +113,49 @@ cleanup:
   g_main_loop_unref (state.loop);
 
   return ret;   
+}
+
+void
+svtp_run_rtsp_server (JNIEnv *env, jobject thiz, jstring pipelineSpec)
+{
+  const jbyte *spec = (*env)->GetStringUTFChars (env, pipelineSpec, NULL);
+  if (spec == NULL) {
+    g_error ("pipelineSpec null");
+    return;
+  }
+
+  GMainLoop *loop;
+  GstRTSPServer *server;
+  GstRTSPMediaMapping *mapping;
+  GstRTSPMediaFactory *factory;
+
+  loop = g_main_loop_new (NULL, FALSE);
+
+  /* create a server instance */
+  server = gst_rtsp_server_new ();
+
+  /* get the mapping for this server, every server has a default mapper object
+   * that be used to map uri mount points to media factories */
+  mapping = gst_rtsp_server_get_media_mapping (server);
+
+  /* make a media factory for a test stream. The default media factory can use
+   * gst-launch syntax to create pipelines. 
+   * any launch line works as long as it contains elements named pay%d. Each
+   * element with pay%d names will be a stream */
+  factory = gst_rtsp_media_factory_new ();
+  gst_rtsp_media_factory_set_launch (factory, spec);
+
+  /* attach the test factory to the /test url */
+  gst_rtsp_media_mapping_add_factory (mapping, "/test", factory);
+
+  /* don't need the ref to the mapper anymore */
+  g_object_unref (mapping);
+
+  /* attach the server to the default maincontext */
+  gst_rtsp_server_attach (server, NULL);
+
+  /* start serving */
+  g_main_loop_run (loop);
 }
 
 static gboolean

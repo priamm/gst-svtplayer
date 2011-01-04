@@ -10,3 +10,4 @@ include $(GST_PBASE_GSTLIBS)/tag/Android.mk
 include $(GST_PBASE_GSTLIBS)/rtp/Android.mk
 include $(GST_PBASE_GSTLIBS)/rtsp/Android.mk
 include $(GST_PBASE_GSTLIBS)/sdp/Android.mk
+include $(GST_PBASE_GSTLIBS)/netbuffer/Android.mk

@@ -4,7 +4,17 @@ include $(CLEAR_VARS)
 
 GST_MAJORMINOR := 0.10
 
-LOCAL_SHARED_LIBRARIES += glib-2.0 gthread-2.0 gobject-2.0 gstreamer-$(GST_MAJORMINOR)
+LOCAL_SHARED_LIBRARIES :=         \
+  glib-2.0                        \
+  gthread-2.0                     \
+  gobject-2.0                     \
+  gstreamer-$(GST_MAJORMINOR)     \
+  gstrtp-$(GST_MAJORMINOR)        \
+  gstrtsp-$(GST_MAJORMINOR)       \
+  gstrtspserver-$(GST_MAJORMINOR) \
+  gstsdp-$(GST_MAJORMINOR)        \
+  gstapp-$(GST_MAJORMINOR)
+
 LOCAL_MODULE    := svtplayer
 LOCAL_SRC_FILES := svtplayer.c logging.c jni.c
 LOCAL_CFLAGS    := -Werror

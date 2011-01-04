@@ -16,4 +16,6 @@ jboolean svtp_load_plugin (JNIEnv *env, jobject thiz, jstring pluginPath);
 
 jboolean svtp_run_pipeline (JNIEnv *env, jobject thiz, jstring pipelineSpec);
 
+void svtp_run_rtsp_server (JNIEnv *env, jobject thiz, jstring pipelineSpec);
+
 #endif
