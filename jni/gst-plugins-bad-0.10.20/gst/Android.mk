@@ -8,3 +8,4 @@ include $(GST_PBAD_GST)/audioparsers/Android.mk
 include $(GST_PBAD_GST)/h264parse/Android.mk
 include $(GST_PBAD_GST)/mpegdemux/Android.mk
 include $(GST_PBAD_GST)/qtmux/Android.mk
+include $(GST_PBAD_GST)/selector/Android.mk
