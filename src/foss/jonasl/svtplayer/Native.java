@@ -27,7 +27,7 @@ public class Native {
     private static String[] sPlugins = {
             "libgstcoreelements.so", "libgstaudioparsersbad.so", "libgsth264parse.so",
             "libgstmpegdemux.so", "libgstqtmux.so", "libgstrtp.so", "libgstrtpmanager.so",
-            "libgstapp.so", "libgstselector.so", "libgstsvthelper.so"
+            "libgstapp.so", "libgstudp.so", "libgstselector.so", "libgstsvthelper.so"
     };
 
     static synchronized void init(Context context) {
