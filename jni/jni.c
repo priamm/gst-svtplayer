@@ -4,7 +4,7 @@
 #define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
 
 static JNINativeMethod native_methods[] = {
-  { "initNative", "()V", &svtp_init},
+  { "initNative", "(I)V", &svtp_init},
   { "loadPlugin", "(Ljava/lang/String;)Z", &svtp_load_plugin},
   { "runPipeline", "(Ljava/lang/String;)Z", &svtp_run_pipeline}
 };

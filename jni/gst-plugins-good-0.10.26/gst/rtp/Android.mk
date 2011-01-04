@@ -3,7 +3,6 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES :=   \
-#	fnv1hash.c \
 	gstrtp.c \
 	gstrtpchannels.c \
 	gstrtpdepay.c \
@@ -13,7 +12,9 @@ LOCAL_SRC_FILES :=   \
 LOCAL_SHARED_LIBRARIES :=       \
   gstbase-$(GST_MAJORMINOR)     \
   gstreamer-$(GST_MAJORMINOR)   \
+  gstaudio-$(GST_MAJORMINOR)    \
   gstrtp-$(GST_MAJORMINOR)      \
+  gsttag-$(GST_MAJORMINOR)      \
   glib-2.0                      \
   gthread-2.0                   \
   gmodule-2.0                   \
