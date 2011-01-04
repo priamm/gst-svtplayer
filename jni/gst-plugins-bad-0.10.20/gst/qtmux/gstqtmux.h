@@ -78,6 +78,8 @@ typedef struct _GstQTPad GstQTPad;
 typedef GstBuffer * (*GstQTPadPrepareBufferFunc) (GstQTPad * pad,
     GstBuffer * buf, GstQTMux * qtmux);
 
+#define QTMUX_NO_OF_TS   10
+
 struct _GstQTPad
 {
   GstCollectData collect;       /* we extend the CollectData */
@@ -102,10 +104,24 @@ struct _GstQTPad
   /* store the first timestamp for comparing with other streams and
    * know if there are late streams */
   GstClockTime first_ts;
+  GstClockTime ts_entries[QTMUX_NO_OF_TS + 2];
+  guint ts_n_entries;
+  GstBuffer *buf_entries[QTMUX_NO_OF_TS + 2];
+  guint buf_head;
+  guint buf_tail;
 
   /* all the atom and chunk book-keeping is delegated here
    * unowned/uncounted reference, parent MOOV owns */
   AtomTRAK *trak;
+  /* fragmented support */
+  /* meta data book-keeping delegated here */
+  AtomTRAF *traf;
+  /* fragment buffers */
+  ATOM_ARRAY (GstBuffer *) fragment_buffers;
+  /* running fragment duration */
+  gint64 fragment_duration;
+  /* optional fragment index book-keeping */
+  AtomTFRA *tfra;
 
   /* if nothing is set, it won't be called */
   GstQTPadPrepareBufferFunc prepare_buf_func;
@@ -144,6 +160,11 @@ struct _GstQTMux
   AtomsContext *context;
   AtomFTYP *ftyp;
   AtomMOOV *moov;
+  GSList *extra_atoms; /* list of extra top-level atoms (e.g. UUID for xmp)
+                        * Stored as AtomInfo structs */
+
+  /* fragmented file index */
+  AtomMFRA *mfra;
 
   /* fast start */
   FILE *fast_start_file;
@@ -151,14 +172,20 @@ struct _GstQTMux
   /* moov recovery */
   FILE *moov_recov_file;
 
+  /* fragment sequence */
+  guint32 fragment_sequence;
+
   /* properties */
   guint32 timescale;
+  guint32 trak_timescale;
   AtomsTreeFlavor flavor;
   gboolean fast_start;
-  gboolean large_file;
   gboolean guess_pts;
+  gint dts_method;
   gchar *fast_start_file_path;
   gchar *moov_recov_file_path;
+  guint32 fragment_duration;
+  gboolean streamable;
 
   /* for collect pads event handling function */
   GstPadEventFunction collect_event;
