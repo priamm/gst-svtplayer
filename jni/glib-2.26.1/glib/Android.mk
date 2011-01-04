@@ -13,6 +13,7 @@ LOCAL_SRC_FILES := \
     gbookmarkfile.c \
     gbuffer.c       \
     gcache.c        \
+    gchecksum.c     \
     gcompletion.c   \
     gconvert.c      \
     gdataset.c      \

@@ -10,7 +10,9 @@ LOCAL_SRC_FILES :=        \
     gstrtspmessage.c      \
     gstrtsprange.c        \
     gstrtsptransport.c    \
-    gstrtspurl.c
+    gstrtspurl.c          \
+    gstrtsp-marshal.c     \
+    gstrtsp-enumtypes.c
 
 LOCAL_SHARED_LIBRARIES :=         \
     gstreamer-$(GST_MAJORMINOR)   \
