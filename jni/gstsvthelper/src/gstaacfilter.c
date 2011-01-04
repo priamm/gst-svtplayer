@@ -187,15 +187,15 @@ gst_aac_filter_chain (GstPad * pad, GstBuffer * buf)
     GST_BUFFER_DURATION (raw_buf) = GST_BUFFER_DURATION (buf);
     GST_BUFFER_OFFSET (raw_buf) = GST_BUFFER_OFFSET (buf);
     gst_buffer_set_caps (raw_buf, src_caps);
-    GST_WARNING_OBJECT (self, "pushing raw converted buffer %i -> %i",
+    GST_LOG_OBJECT (self, "pushing raw converted buffer %i -> %i",
         GST_BUFFER_SIZE (buf), GST_BUFFER_SIZE (raw_buf));
     ret = gst_pad_push (self->srcpad, raw_buf);
   }
   
   if (G_LIKELY (ret == GST_FLOW_OK)) {
-    GST_WARNING_OBJECT (self, "buffer pushed ok");
+    GST_LOG_OBJECT (self, "buffer pushed ok");
   } else {
-    GST_WARNING_OBJECT (self, "buffer push failed");
+    GST_LOG_OBJECT (self, "buffer push failed");
   }
 
   return ret;
