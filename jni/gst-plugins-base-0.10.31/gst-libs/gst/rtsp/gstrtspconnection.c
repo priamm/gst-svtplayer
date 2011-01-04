@@ -587,7 +587,7 @@ do_connect (const gchar * ip, guint16 port, GstPollFD * fdout,
   if (gst_poll_fd_has_error (fdset, fdout)) {
     socklen_t len = sizeof (errno);
 #ifndef G_OS_WIN32
-    getsockopt (fd, SOL_SOCKET, SO_ERROR, &errno, &len);
+    getsockopt (fd, SOL_SOCKET, SO_ERROR, (void *) &errno, &len);
 #else
     getsockopt (fd, SOL_SOCKET, SO_ERROR, (char *) &errno, &len);
 #endif
