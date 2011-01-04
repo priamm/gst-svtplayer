@@ -22,14 +22,12 @@ svtp_init (JNIEnv *env, jobject thiz, jint logLevel)
       | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_WARNING | G_LOG_LEVEL_ERROR
       | G_LOG_FLAG_FATAL, svtp_glib_log, NULL);
 
-  gst_debug_set_default_threshold ((GstDebugLevel) logLevel);
+  if ((GstDebugLevel) logLevel > gst_debug_get_default_threshold ()) {
+    gst_debug_set_default_threshold ((GstDebugLevel) logLevel);
+  }
   gst_init (NULL, NULL);
   gst_debug_remove_log_function (gst_debug_log_default);
   gst_debug_add_log_function (svtp_gst_log, NULL);
-
-  if (!gst_debug_is_active ()) {
-    gst_debug_set_active (TRUE);
-  }
 
   g_debug ("init done");
 }
@@ -154,6 +152,7 @@ svtp_run_rtsp_server (JNIEnv *env, jobject thiz, jstring pipelineSpec)
   /* attach the server to the default maincontext */
   gst_rtsp_server_attach (server, NULL);
 
+  gst_debug_set_threshold_for_name ("mpegtsdemux", GST_LEVEL_NONE);
   /* start serving */
   g_main_loop_run (loop);
 }
