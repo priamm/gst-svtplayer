@@ -26,6 +26,10 @@ void svtp_gst_log (GstDebugCategory * category, GstDebugLevel level,
   gchar *name;
   gchar *msg;
 
+  if (level > gst_debug_category_get_threshold (category)) {
+    return;
+  }
+
   if (GST_IS_OBJECT (object) && GST_OBJECT_NAME (object)) {
     name = GST_OBJECT_NAME (object);
   } else {
