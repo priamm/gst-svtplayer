@@ -12,16 +12,18 @@ LOCAL_LDLIBS    := -llog
 
 include $(BUILD_SHARED_LIBRARY)
 
-GLIB_TOP      := $(LOCAL_PATH)/glib-2.26.1
-GST_TOP       := $(LOCAL_PATH)/gstreamer-0.10.31
-GST_PBASE_TOP := $(LOCAL_PATH)/gst-plugins-base-0.10.31
-GST_PGOOD_TOP := $(LOCAL_PATH)/gst-plugins-good-0.10.26
-GST_PBAD_TOP  := $(LOCAL_PATH)/gst-plugins-bad-0.10.20
-GST_SVTH_TOP  := $(LOCAL_PATH)/gstsvthelper
+GLIB_TOP            := $(LOCAL_PATH)/glib-2.26.1
+GST_TOP             := $(LOCAL_PATH)/gstreamer-0.10.31
+GST_PBASE_TOP       := $(LOCAL_PATH)/gst-plugins-base-0.10.31
+GST_PGOOD_TOP       := $(LOCAL_PATH)/gst-plugins-good-0.10.26
+GST_PBAD_TOP        := $(LOCAL_PATH)/gst-plugins-bad-0.10.20
+GST_RTSPSERVER_TOP  := $(LOCAL_PATH)/gst-rtsp-server
+GST_SVTH_TOP        := $(LOCAL_PATH)/gstsvthelper
 
 include $(GLIB_TOP)/Android.mk
 include $(GST_TOP)/Android.mk
 include $(GST_PBASE_TOP)/Android.mk
 include $(GST_PGOOD_TOP)/Android.mk
 include $(GST_PBAD_TOP)/Android.mk
+include $(GST_RTSPSERVER_TOP)/Android.mk
 include $(GST_SVTH_TOP)/Android.mk

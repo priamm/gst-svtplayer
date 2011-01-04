@@ -1,1 +1,8 @@
-glib & gstreamer for Android NDK based on work done by Guillaume Emont & Edward Hervey
+glib & gstreamer for Android NDK inspired by work done by Guillaume Emont & Edward Hervey.
+I've started the Android work from scratch but used their work as guide line.
+
+rtsp-server from git, latest commit
+commit 220f9118514dd1075655f9f3ec9b9a05585c7318
+Author: Wim Taymans <wim.taymans@collabora.co.uk>
+Date:   Thu Dec 30 12:41:53 2010 +0100
+
