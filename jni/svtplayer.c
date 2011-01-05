@@ -29,6 +29,9 @@ svtp_init (JNIEnv *env, jobject thiz, jint logLevel)
   gst_debug_remove_log_function (gst_debug_log_default);
   gst_debug_add_log_function (svtp_gst_log, NULL);
 
+  // TODO: Expose via JNI
+  gst_debug_set_threshold_for_name ("mpegtsdemux", GST_LEVEL_NONE);
+
   g_debug ("init done");
 }
 
@@ -152,7 +155,6 @@ svtp_run_rtsp_server (JNIEnv *env, jobject thiz, jstring pipelineSpec)
   /* attach the server to the default maincontext */
   gst_rtsp_server_attach (server, NULL);
 
-  gst_debug_set_threshold_for_name ("mpegtsdemux", GST_LEVEL_NONE);
   /* start serving */
   g_main_loop_run (loop);
 }
