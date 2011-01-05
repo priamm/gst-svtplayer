@@ -37,7 +37,7 @@ public class Native {
         for (String lib : sLibs) {
             System.loadLibrary(lib);
         }
-        initNative(GST_LEVEL_LOG);
+        initNative(GST_LEVEL_INFO);
 
         String dataPath;
         try {
