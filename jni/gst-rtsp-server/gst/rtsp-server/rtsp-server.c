@@ -152,6 +152,13 @@ gst_rtsp_server_finalize (GObject * object)
 
   g_object_unref (server->session_pool);
   g_object_unref (server->media_mapping);
+
+  if (server->io_watch)
+    g_source_unref (server->io_watch);
+  if (server->io_channel)
+    g_io_channel_unref (server->io_channel);
+  if (server->server_sock.fd >= 0)
+    close (server->server_sock.fd);
 }
 
 /**
