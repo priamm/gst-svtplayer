@@ -11,6 +11,7 @@ static JNINativeMethod native_methods[] = {
   { "rtspServerRegister", "(ILjava/lang/String;Ljava/lang/String;)V",
       &svtp_rtsp_server_register},
   { "rtspServerRemove", "(ILjava/lang/String;)V", &svtp_rtsp_server_remove},
+  { "rtspCleanup", "(I)I", &svtp_rtsp_server_cleanup},
   { "rtspServerFree", "(II)V", &svtp_rtsp_server_free},
   { "mainLoopCreate", "()I", &svtp_main_loop_create},
   { "mainLoopRun", "(I)V", &svtp_main_loop_run},

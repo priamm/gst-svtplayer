@@ -198,6 +198,27 @@ cleanup:
   }
 }
 
+jint
+svtp_rtsp_server_cleanup (JNIEnv *env, jobject thiz, jint serverHandle)
+{
+  FUNCLOG;
+
+  GstRTSPServer *server;
+  GstRTSPSessionPool *pool;
+  jint result;
+
+  result = 0;
+  server = (GstRTSPServer *) serverHandle;
+  pool = gst_rtsp_server_get_session_pool (server);
+  if (pool) {
+    gst_rtsp_session_pool_cleanup (pool);
+    result = gst_rtsp_session_pool_get_n_sessions (pool);
+    g_object_unref (pool);
+  }
+
+  return result;
+}
+
 void
 svtp_rtsp_server_free (JNIEnv *env, jobject thiz, jint serverHandle,
     jint sourceHandle)

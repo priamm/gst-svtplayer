@@ -26,6 +26,8 @@ void svtp_rtsp_server_register (JNIEnv *env, jobject thiz, jint serverHandle,
 void svtp_rtsp_server_remove (JNIEnv *env, jobject thiz, jint serverHandle,
     jstring path);
 
+jint svtp_rtsp_server_cleanup (JNIEnv *env, jobject thiz, jint serverHandle);
+
 void svtp_rtsp_server_free (JNIEnv *env, jobject thiz, jint serverHandle,
     jint sourceHandle);
 

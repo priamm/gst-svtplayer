@@ -2,6 +2,7 @@
 package foss.jonasl.svtplayer.utils;
 
 import java.io.File;
+import java.util.Random;
 
 import foss.jonasl.svtplayer.L;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.os.SystemClock;
 
 public class Utils {
 
@@ -57,6 +59,16 @@ public class Utils {
     public static File getPVRWorkDir(long id) {
         File pvrDir = new File(getOwnDir(), ".pvr");
         return new File(pvrDir, String.valueOf(id));
+    }
+
+    public static String getRandomHexString(int length) {
+        final String chars = "0123456789abcdef";
+        char[] s = new char[length];
+        Random r = new Random(SystemClock.elapsedRealtime());
+        for (int i = 0; i < length; i++) {
+            s[i] = chars.charAt(r.nextInt(chars.length()));
+        }
+        return new String(s);
     }
 
     public static void invokeMediaScanner(Context context, File file) {
