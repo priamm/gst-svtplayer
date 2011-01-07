@@ -1,4 +1,3 @@
-
 package foss.jonasl.svtplayer;
 
 import java.io.File;
@@ -8,58 +7,69 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 public class Native {
 
-    public static final int GST_LEVEL_NONE = 0;
-    public static final int GST_LEVEL_ERROR = 1;
-    public static final int GST_LEVEL_WARNING = 2;
-    public static final int GST_LEVEL_INFO = 3;
-    public static final int GST_LEVEL_DEBUG = 4;
-    public static final int GST_LEVEL_LOG = 5;
+  public static final int GST_LEVEL_NONE = 0;
+  public static final int GST_LEVEL_ERROR = 1;
+  public static final int GST_LEVEL_WARNING = 2;
+  public static final int GST_LEVEL_INFO = 3;
+  public static final int GST_LEVEL_DEBUG = 4;
+  public static final int GST_LEVEL_LOG = 5;
 
-    private static boolean sInitialized = false;
+  private static boolean sInitialized = false;
 
-    private static String[] sLibs = {
-            "glib-2.0", "gmodule-2.0", "gthread-2.0", "gobject-2.0", "gstreamer-0.10",
-            "gstbase-0.10", "gstcontroller-0.10", "gstdataprotocol-0.10", "gstnet-0.10",
-            "gstnetbuffer-0.10", "gsttag-0.10", "gstapp-0.10", "gstaudio-0.10", "gstrtp-0.10",
-            "gstrtsp-0.10", "gstsdp-0.10", "gstrtspserver-0.10", "svtplayer"
-    };
+  private static String[] sLibs = { "glib-2.0", "gmodule-2.0", "gthread-2.0",
+      "gobject-2.0", "gstreamer-0.10", "gstbase-0.10", "gstcontroller-0.10",
+      "gstdataprotocol-0.10", "gstnet-0.10", "gstnetbuffer-0.10",
+      "gsttag-0.10", "gstapp-0.10", "gstaudio-0.10", "gstrtp-0.10",
+      "gstrtsp-0.10", "gstsdp-0.10", "gstrtspserver-0.10", "svtplayer" };
 
-    private static String[] sPlugins = {
-            "libgstcoreelements.so", "libgstaudioparsersbad.so", "libgsth264parse.so",
-            "libgstmpegdemux.so", "libgstqtmux.so", "libgstrtp.so", "libgstrtpmanager.so",
-            "libgstapp.so", "libgstudp.so", "libgstselector.so", "libgstsvthelper.so"
-    };
+  private static String[] sPlugins = { "libgstcoreelements.so",
+      "libgstaudioparsersbad.so", "libgsth264parse.so", "libgstmpegdemux.so",
+      "libgstqtmux.so", "libgstrtp.so", "libgstrtpmanager.so", "libgstapp.so",
+      "libgstudp.so", "libgstselector.so", "libgstsvthelper.so" };
 
-    static synchronized void init(Context context) {
-        if (sInitialized) {
-            return;
-        }
-        for (String lib : sLibs) {
-            System.loadLibrary(lib);
-        }
-        initNative(GST_LEVEL_INFO);
+  static synchronized void init(Context context) {
+    if (sInitialized) {
+      return;
+    }
+    for (String lib : sLibs) {
+      System.loadLibrary(lib);
+    }
+    initNative(GST_LEVEL_INFO);
 
-        String dataPath;
-        try {
-            dataPath = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0).dataDir;
-        } catch (NameNotFoundException e) {
-            dataPath = context.getFilesDir().getParentFile().getAbsolutePath();
-        }
-        File libDir = new File(dataPath, "lib");
-        for (String plugin : sPlugins) {
-            if (!loadPlugin(new File(libDir, plugin).getAbsolutePath())) {
-                L.d("failed: " + plugin);
-            }
-        }
-
-        sInitialized = true;
+    String dataPath;
+    try {
+      dataPath = context.getPackageManager().getApplicationInfo(
+          context.getPackageName(), 0).dataDir;
+    } catch (NameNotFoundException e) {
+      dataPath = context.getFilesDir().getParentFile().getAbsolutePath();
+    }
+    File libDir = new File(dataPath, "lib");
+    for (String plugin : sPlugins) {
+      if (!loadPlugin(new File(libDir, plugin).getAbsolutePath())) {
+        L.d("failed: " + plugin);
+      }
     }
 
-    static native void initNative(int logLevel);
+    sInitialized = true;
+  }
 
-    private static native boolean loadPlugin(String path);
+  static native void initNative(int logLevel);
 
-    public static native boolean runPipeline(String pipeline);
+  private static native boolean loadPlugin(String path);
 
-    public static native void runRtspServer(String pipeline);
+  public static native boolean runPipeline(String pipeline);
+
+  public static native int[] rtspServerCreate();
+
+  public static native void rtspServerRegister(int serverHandle, String path, String pipeline);
+
+  public static native void rtspServerRemove(int serverHandle, String path);
+
+  public static native void rtspServerFree(int serverHandle, int sourceHandle);
+
+  public static native int mainLoopCreate();
+
+  public static native void mainLoopRun(int loopHandle);
+
+  public static native void mainLoopFree(int loopHandle);
 }

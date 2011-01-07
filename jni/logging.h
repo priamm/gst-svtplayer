@@ -13,6 +13,8 @@
 #define  LOGW(...)  __android_log_print(ANDROID_LOG_WARN,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
+#define FUNCLOG LOGD("%s",__PRETTY_FUNCTION__)
+
 void svtp_glib_log (const gchar *log_domain, GLogLevelFlags log_level,
     const gchar *log_message, gpointer user_data);
 

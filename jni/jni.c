@@ -7,7 +7,14 @@ static JNINativeMethod native_methods[] = {
   { "initNative", "(I)V", &svtp_init},
   { "loadPlugin", "(Ljava/lang/String;)Z", &svtp_load_plugin},
   { "runPipeline", "(Ljava/lang/String;)Z", &svtp_run_pipeline},
-  { "runRtspServer", "(Ljava/lang/String;)V", &svtp_run_rtsp_server}  
+  { "rtspServerCreate", "()[I", &svtp_rtsp_server_create},
+  { "rtspServerRegister", "(ILjava/lang/String;Ljava/lang/String;)V",
+      &svtp_rtsp_server_register},
+  { "rtspServerRemove", "(ILjava/lang/String;)V", &svtp_rtsp_server_remove},
+  { "rtspServerFree", "(II)V", &svtp_rtsp_server_free},
+  { "mainLoopCreate", "()I", &svtp_main_loop_create},
+  { "mainLoopRun", "(I)V", &svtp_main_loop_run},
+  { "mainLoopFree", "(I)V", &svtp_main_loop_free}
 };
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)

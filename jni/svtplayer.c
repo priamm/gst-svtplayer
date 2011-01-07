@@ -116,6 +116,137 @@ cleanup:
   return ret;   
 }
 
+jintArray 
+svtp_rtsp_server_create (JNIEnv *env, jobject thiz)
+{
+  FUNCLOG;
+
+  GstRTSPServer *server;
+  jintArray result;
+  jint localResult[2];
+
+  result = (*env)->NewIntArray(env, 2);
+  if (result == NULL) {
+    return NULL; /* out of memory error thrown */
+  }
+
+  server = gst_rtsp_server_new ();
+  localResult[0] = (jint) server;
+  localResult[1] = gst_rtsp_server_attach (server, NULL);
+
+  (*env)->SetIntArrayRegion(env, result, 0, 2, localResult);
+  return result;
+}
+
+void
+svtp_rtsp_server_register (JNIEnv *env, jobject thiz, jint serverHandle,
+    jstring path, jstring pipelineSpec)
+{
+  const jbyte *spec = (*env)->GetStringUTFChars (env, pipelineSpec, NULL);
+  if (spec == NULL) {
+    g_error ("pipelineSpec null");
+    goto cleanup;
+  }
+  const jbyte *p = (*env)->GetStringUTFChars (env, path, NULL);
+  if (p == NULL) {
+    g_error ("path null");
+    goto cleanup;
+  }
+
+  GstRTSPServer *server;
+  GstRTSPMediaMapping *mapping;
+  GstRTSPMediaFactory *factory;
+
+  server = (GstRTSPServer *) serverHandle;
+  mapping = gst_rtsp_server_get_media_mapping (server);
+  factory = gst_rtsp_media_factory_new ();
+  gst_rtsp_media_factory_set_launch (factory, spec);
+  gst_rtsp_media_mapping_add_factory (mapping, p, factory);
+  g_object_unref (mapping);
+
+cleanup:
+  if (spec) {
+    (*env)->ReleaseStringUTFChars (env, pipelineSpec, spec);
+  }
+  if (p) {
+    (*env)->ReleaseStringUTFChars (env, path, p);
+  }
+}
+
+void
+svtp_rtsp_server_remove (JNIEnv *env, jobject thiz, jint serverHandle,
+    jstring path)
+{
+  const jbyte *p = (*env)->GetStringUTFChars (env, path, NULL);
+  if (p == NULL) {
+    g_error ("path null");
+    goto cleanup;
+  }
+
+  GstRTSPServer *server;
+  GstRTSPMediaMapping *mapping;
+  GstRTSPMediaFactory *factory;
+
+  server = (GstRTSPServer *) serverHandle;
+  mapping = gst_rtsp_server_get_media_mapping (server);
+  gst_rtsp_media_mapping_remove_factory (mapping, p);
+  g_object_unref (mapping);
+
+cleanup:
+  if (p) {
+    (*env)->ReleaseStringUTFChars (env, path, p);
+  }
+}
+
+void
+svtp_rtsp_server_free (JNIEnv *env, jobject thiz, jint serverHandle,
+    jint sourceHandle)
+{
+  FUNCLOG;
+
+  GstRTSPServer *server;
+
+  server = (GstRTSPServer *) serverHandle;
+
+  g_source_remove (sourceHandle);
+  g_object_unref (server);
+}
+
+jint
+svtp_main_loop_create (JNIEnv *env, jobject thiz)
+{
+  FUNCLOG;
+
+  GMainLoop *loop;
+
+  loop = g_main_loop_new (NULL, FALSE);
+  
+  return (jint) loop;
+}
+
+void
+svtp_main_loop_run (JNIEnv *env, jobject thiz, jint loopHandle)
+{
+  FUNCLOG;
+
+  GMainLoop *loop;
+
+  loop = (GMainLoop *) loopHandle;
+  g_main_loop_run (loop);
+}
+
+void
+svtp_main_loop_free (JNIEnv *env, jobject thiz, jint loopHandle)
+{
+  FUNCLOG;
+
+  GMainLoop *loop;
+
+  loop = (GMainLoop *) loopHandle;
+  g_main_loop_quit (loop);
+  g_main_loop_unref (loop);
+}
+
 void
 svtp_run_rtsp_server (JNIEnv *env, jobject thiz, jstring pipelineSpec)
 {
