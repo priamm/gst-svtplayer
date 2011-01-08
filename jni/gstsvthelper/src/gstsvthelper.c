@@ -3,6 +3,7 @@
 #include "gstsvthelper.h"
 #include "gstaacfilter.h"
 #include "gsth264filter.h"
+#include "gstsvtpsrc.h"
 
 /* Debug categories */
 GST_DEBUG_CATEGORY (gst_svthelper_debug);
@@ -20,6 +21,13 @@ plugin_init (GstPlugin * plugin)
       GST_TYPE_H264_FILTER)) {
     return FALSE;
   }
+
+#ifdef ANDROID
+  if (!gst_element_register (plugin, "svtpsrc", GST_RANK_NONE,
+      GST_TYPE_SVTP_SRC)) {
+    return FALSE;
+  }
+#endif
 
   GST_DEBUG_CATEGORY_INIT (gst_svthelper_debug, "svthelper", 0,
       "SVT play helpers");
