@@ -3,6 +3,8 @@
 
 #define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
 
+JavaVM* svtp_vm;
+
 static JNINativeMethod native_methods[] = {
   { "initNative", "(I)V", &svtp_init},
   { "loadPlugin", "(Ljava/lang/String;)Z", &svtp_load_plugin},
@@ -29,6 +31,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
   if ((*vm)->GetEnv (vm, (void**) &env, JNI_VERSION_1_6) != JNI_OK) {
     return -1;
   }
+  svtp_vm = vm;
   native_class = (*env)->FindClass (env, "foss/jonasl/svtplayer/Native");
   reg_res = (*env)->RegisterNatives (env, native_class, &native_methods[0],
       (jint) NELEM (native_methods));

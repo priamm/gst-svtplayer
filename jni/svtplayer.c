@@ -11,6 +11,12 @@
 
 static gboolean bus_call (GstBus *bus, GstMessage *msg, gpointer data);
 
+static gboolean
+init_static (GstPlugin *plugin)
+{
+
+}
+
 void
 svtp_init (JNIEnv *env, jobject thiz, jint logLevel)
 {
@@ -31,6 +37,10 @@ svtp_init (JNIEnv *env, jobject thiz, jint logLevel)
 
   // TODO: Expose via JNI
   gst_debug_set_threshold_for_name ("mpegtsdemux", GST_LEVEL_NONE);
+
+  gst_plugin_register_static (GST_VERSION_MAJOR, GST_VERSION_MINOR, "svtp",
+      "svtp", init_static, "42", "GPL", "svtplayer",
+      "svtplayer", "github");
 
   g_debug ("init done");
 }

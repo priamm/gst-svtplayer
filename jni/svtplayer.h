@@ -10,6 +10,8 @@ struct svtp_state {
    gint error;
 };
 
+JavaVM* svtp_vm;
+
 void svtp_init (JNIEnv *env, jobject thiz, jint logLevel);
 
 jboolean svtp_load_plugin (JNIEnv *env, jobject thiz, jstring pluginPath);

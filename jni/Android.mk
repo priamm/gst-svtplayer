@@ -9,6 +9,7 @@ LOCAL_SHARED_LIBRARIES :=         \
   gthread-2.0                     \
   gobject-2.0                     \
   gstreamer-$(GST_MAJORMINOR)     \
+  gstbase-$(GST_MAJORMINOR)       \
   gstrtp-$(GST_MAJORMINOR)        \
   gstrtsp-$(GST_MAJORMINOR)       \
   gstrtspserver-$(GST_MAJORMINOR) \
@@ -16,7 +17,7 @@ LOCAL_SHARED_LIBRARIES :=         \
   gstapp-$(GST_MAJORMINOR)
 
 LOCAL_MODULE    := svtplayer
-LOCAL_SRC_FILES := svtplayer.c logging.c jni.c
+LOCAL_SRC_FILES := svtplayer.c logging.c jni.c gstsvtpsrc.c
 LOCAL_CFLAGS    := -Werror
 LOCAL_LDLIBS    := -llog
 
