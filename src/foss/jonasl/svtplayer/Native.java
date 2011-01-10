@@ -59,6 +59,8 @@ public class Native {
 
     private static native boolean loadPlugin(String path);
 
+    public static native void setLoglevel (String category, int logLevel);
+
     public static native boolean runPipeline(String pipeline);
 
     public static native int[] rtspServerCreate();

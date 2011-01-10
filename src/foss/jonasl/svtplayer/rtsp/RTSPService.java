@@ -10,7 +10,6 @@ import foss.jonasl.svtplayer.utils.Pipelines;
 import foss.jonasl.svtplayer.utils.Utils;
 import android.app.Service;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -19,6 +18,9 @@ public class RTSPService extends Service {
     public final static String ACTION_RTSP_READY = "foss.jonasl.svtplayer.rtsp.READY";
 
     private final static int CLEANUP_INTERVAL = 60 * 1000;
+
+    @SuppressWarnings("unused")
+    private static RTSPService sInstance = null;
 
     private int mServerHandle = 0;
     private int mSourceHandle = 0;
@@ -30,10 +32,14 @@ public class RTSPService extends Service {
     private ReentrantLock mLoopStartedLock = new ReentrantLock();
     private Condition mLoopStartedCondition = mLoopStartedLock.newCondition();
     private String mPath = null;
+    private int mId = 0;
 
     @Override
     public void onCreate() {
+        sInstance = this;
         L.d("RTSPService starting");
+        Native.setLoglevel("mpegtsdemux", Native.GST_LEVEL_ERROR);
+        Native.setLoglevel("svtpsrc", Native.GST_LEVEL_LOG);
         int[] tmp = Native.rtspServerCreate();
         mServerHandle = tmp[0];
         mSourceHandle = tmp[1];
@@ -95,7 +101,8 @@ public class RTSPService extends Service {
     @Override
     public void onDestroy() {
         L.d("RTSPService destroy");
-
+        sInstance = null;
+        
         L.d("RTSPService mainLoopFree " + mMainLoopHandle);
         Native.mainLoopFree(mMainLoopHandle);
         L.d("RTSPService rtspServerFree " + mServerHandle + "," + mSourceHandle);
@@ -110,11 +117,19 @@ public class RTSPService extends Service {
             Native.rtspServerRemove(mServerHandle, mPath);
         }
         mPath = "/" + Utils.getRandomHexString(10);
+        mId++;
         L.d("registering " + mPath);
         Native.rtspServerRegister(mServerHandle, mPath, Pipelines
                 .tsFileToRtsp("/mnt/sdcard/svtplayer/696285.ts"));
-        L.d("breadcasting");
+        L.d("broadcasting");
         broadcastReady();
+        
+        mCleanupHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Native.runPipeline("svtpsrc duration=1 id=5 ! fakesink");
+            }
+        });
         return START_STICKY;
     }
 
@@ -123,6 +138,11 @@ public class RTSPService extends Service {
         i.putExtra("url", "rtsp://127.0.0.1:8554" + mPath);
         L.d("broadcasting ready url: " + i.getStringExtra("url"));
         sendBroadcast(i);
+    }
+
+    @SuppressWarnings("unused")
+    private void test(int id) {
+        L.d ("test called from " + id);
     }
 
     @Override

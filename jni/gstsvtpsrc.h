@@ -23,10 +23,20 @@ typedef struct _GstSvtpSrcClass GstSvtpSrcClass;
 struct _GstSvtpSrc
 {
   GstPushSrc parent;
-  
-  gint duration;
-  gboolean seekable;
-  gboolean discont;
+
+  GMutex          *lock;
+  GCond           *not_empty;
+  GCond           *not_full;
+  GCond           *seek_handled;
+  GThread         *thread;
+  gboolean         started;
+  gboolean         unlocked;
+  gboolean         discont;
+  guchar          *buf;
+  guint            buf_len;
+  gint             duration;
+  gint64           seek_pos;
+  gint             id;
 };
 
 struct _GstSvtpSrcClass

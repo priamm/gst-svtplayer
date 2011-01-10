@@ -6,6 +6,7 @@
 #include <gst/gst.h>
 #include <gst/rtsp-server/rtsp-server.h>
 
+#include "gstsvtpsrc.h"
 #include "logging.h"
 #include "svtplayer.h"
 
@@ -14,7 +15,8 @@ static gboolean bus_call (GstBus *bus, GstMessage *msg, gpointer data);
 static gboolean
 init_static (GstPlugin *plugin)
 {
-
+  return gst_element_register (plugin, "svtpsrc", GST_RANK_PRIMARY,
+      GST_TYPE_SVTP_SRC);
 }
 
 void
@@ -38,11 +40,24 @@ svtp_init (JNIEnv *env, jobject thiz, jint logLevel)
   // TODO: Expose via JNI
   gst_debug_set_threshold_for_name ("mpegtsdemux", GST_LEVEL_NONE);
 
-  gst_plugin_register_static (GST_VERSION_MAJOR, GST_VERSION_MINOR, "svtp",
-      "svtp", init_static, "42", "GPL", "svtplayer",
-      "svtplayer", "github");
+  if (!gst_element_register (NULL, "svtpsrc", GST_RANK_NONE,
+      GST_TYPE_SVTP_SRC)) {
+      g_error ("could not register svtpsrc");
+  }
 
   g_debug ("init done");
+}
+
+void
+svtp_set_log_level (JNIEnv *env, jobject thiz, jstring category, jint logLevel)
+{
+  const jbyte *cat = (*env)->GetStringUTFChars (env, category, NULL);
+  if (cat == NULL) {
+    g_error ("category null");
+    return;
+  }
+  gst_debug_set_threshold_for_name (cat, (GstDebugLevel) logLevel);
+  (*env)->ReleaseStringUTFChars (env, category, cat);
 }
 
 jboolean
@@ -105,7 +120,7 @@ svtp_run_pipeline (JNIEnv *env, jobject thiz, jstring pipelineSpec)
   g_debug ("setting to playing state");
   sret = gst_element_set_state (pipeline, GST_STATE_PLAYING);
   if (sret == GST_STATE_CHANGE_FAILURE) {
-    g_error ("unable to set pipeline to playing state");
+    LOGE ("unable to set pipeline to playing state");
     goto cleanup;
   }
 
@@ -328,7 +343,7 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 
   switch (GST_MESSAGE_TYPE (msg)) {
     case GST_MESSAGE_EOS:
-      g_debug ("bus_call eos");
+      g_debug ("bus_call: eos");
 
       state->error = 0;
       g_main_loop_quit (state->loop);
@@ -339,7 +354,7 @@ bus_call (GstBus *bus, GstMessage *msg, gpointer data)
       GError *error;
 
       gst_message_parse_error (msg, &error, &debug);      
-      g_error ("%s %s", error->message, debug);
+      LOGE ("bus_call: %s %s", error->message, debug);
       g_error_free (error);
       g_free (debug);
 

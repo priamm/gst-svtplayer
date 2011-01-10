@@ -11,10 +11,14 @@ struct svtp_state {
 };
 
 JavaVM* svtp_vm;
+jclass* svtp_rtsp_class;
 
 void svtp_init (JNIEnv *env, jobject thiz, jint logLevel);
 
 jboolean svtp_load_plugin (JNIEnv *env, jobject thiz, jstring pluginPath);
+
+void svtp_set_log_level (JNIEnv *env, jobject thiz, jstring category,
+    jint logLevel);
 
 jboolean svtp_run_pipeline (JNIEnv *env, jobject thiz, jstring pipelineSpec);
 
