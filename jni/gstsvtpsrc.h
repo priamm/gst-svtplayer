@@ -33,7 +33,7 @@ struct _GstSvtpSrc
   gboolean         unlocked;
   gboolean         discont;
   guchar          *buf;
-  guint            buf_len;
+  gint             buf_len;
   gint             duration;
   gint64           seek_pos;
   gint             id;

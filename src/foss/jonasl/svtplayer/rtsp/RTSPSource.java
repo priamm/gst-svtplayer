@@ -1,5 +1,10 @@
+
 package foss.jonasl.svtplayer.rtsp;
 
-public interface RTSPSource {
+import java.nio.ByteBuffer;
 
+public interface RTSPSource {
+    public void seek(long position);
+
+    public int getData(ByteBuffer buffer);
 }

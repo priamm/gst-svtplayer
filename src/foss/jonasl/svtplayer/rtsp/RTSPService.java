@@ -1,6 +1,7 @@
 
 package foss.jonasl.svtplayer.rtsp;
 
+import java.nio.ByteBuffer;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -33,13 +34,15 @@ public class RTSPService extends Service {
     private Condition mLoopStartedCondition = mLoopStartedLock.newCondition();
     private String mPath = null;
     private int mId = 0;
+    private RTSPSource mSource = null;
 
     @Override
     public void onCreate() {
         sInstance = this;
         L.d("RTSPService starting");
-        Native.setLoglevel("mpegtsdemux", Native.GST_LEVEL_ERROR);
-        Native.setLoglevel("svtpsrc", Native.GST_LEVEL_LOG);
+        //Native.setLoglevel("mpegtsdemux", Native.GST_LEVEL_DEBUG);
+        Native.setLoglevel("svtpsrc", Native.GST_LEVEL_INFO);
+        Native.setLoglevel("rtspmedia", Native.GST_LEVEL_INFO);
         int[] tmp = Native.rtspServerCreate();
         mServerHandle = tmp[0];
         mSourceHandle = tmp[1];
@@ -102,7 +105,7 @@ public class RTSPService extends Service {
     public void onDestroy() {
         L.d("RTSPService destroy");
         sInstance = null;
-        
+
         L.d("RTSPService mainLoopFree " + mMainLoopHandle);
         Native.mainLoopFree(mMainLoopHandle);
         L.d("RTSPService rtspServerFree " + mServerHandle + "," + mSourceHandle);
@@ -119,15 +122,14 @@ public class RTSPService extends Service {
         mPath = "/" + Utils.getRandomHexString(10);
         mId++;
         L.d("registering " + mPath);
-        Native.rtspServerRegister(mServerHandle, mPath, Pipelines
-                .tsFileToRtsp("/mnt/sdcard/svtplayer/696285.ts"));
+        Native.rtspServerRegister(mServerHandle, mPath, Pipelines.appleToRtsp(29 * 60, 6));
         L.d("broadcasting");
         broadcastReady();
-        
+        mSource = new AppleHttpSource();
         mCleanupHandler.post(new Runnable() {
             @Override
             public void run() {
-                Native.runPipeline("svtpsrc duration=1 id=5 ! fakesink");
+                // Native.runPipeline("svtpsrc duration=1 id=5 ! fakesink");
             }
         });
         return START_STICKY;
@@ -141,8 +143,24 @@ public class RTSPService extends Service {
     }
 
     @SuppressWarnings("unused")
-    private void test(int id) {
-        L.d ("test called from " + id);
+    private void seek(int id, long position) {
+        try {
+            L.d(id + " seek " + position);
+            mSource.seek(position);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private int getData(int id, ByteBuffer buffer) {
+        try {
+            return mSource.getData(buffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.d(e.toString() + e.getMessage());
+        }
+        return -1;
     }
 
     @Override

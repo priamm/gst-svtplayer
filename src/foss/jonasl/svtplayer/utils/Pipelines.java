@@ -27,4 +27,19 @@ public class Pipelines {
     L.d(b.toString());
     return b.toString();
   }
+
+  public static String appleToRtsp(int duration, int id) {
+      StringBuilder b = new StringBuilder();
+      b.append("( svtpsrc duration=");
+      b.append(duration);
+      b.append(" id=");
+      b.append(id);
+      b.append(" ! mpegtsdemux name=d");
+      b.append(" d. ! queue ! h264parse output-format=0").append(
+          " ! h264filter ! rtph264pay name=pay0 pt=96").append(
+          " d. ! queue ! aacparse ! aacfilter !").append(
+          " rtpmp4apay name=pay1 pt=97 )");
+      L.d(b.toString());
+      return b.toString();
+    }
 }

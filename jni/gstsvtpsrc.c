@@ -79,7 +79,7 @@ gst_svtp_src_class_init (GstSvtpSrcClass * klass)
       g_param_spec_int ("duration", "duration",
           "Stream duration in seconds. <=0 if unknown", G_MININT, G_MAXINT, 0,
            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-  g_object_class_install_property (gobject_class, PROP_DURATION,
+  g_object_class_install_property (gobject_class, PROP_ID,
       g_param_spec_int ("id", "id",
           "Stream id", G_MININT, G_MAXINT, 0,
            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
@@ -270,8 +270,6 @@ gst_svtp_src_unlock_stop (GstBaseSrc * src)
 static GstFlowReturn
 gst_svtp_src_create (GstPushSrc * pushsrc, GstBuffer ** buffer)
 {
-  return GST_FLOW_UNEXPECTED;
-/*
   GstSvtpSrc *self;
   GstBuffer* buf;
 
@@ -284,9 +282,9 @@ gst_svtp_src_create (GstPushSrc * pushsrc, GstBuffer ** buffer)
     return GST_FLOW_WRONG_STATE;
   }
 
-  if (self->buf_len == 0) {
-    GST_LOG_OBJECT (self, "waiting for data");
-    g_cond_wait (self->not_empty, self->lock);    
+  if (G_UNLIKELY (self->seek_pos != GST_CLOCK_TIME_NONE)) {
+    GST_LOG_OBJECT (self, "waiting for seek");
+    g_cond_wait (self->seek_handled, self->lock);    
   }
 
   if (self->unlocked) {
@@ -295,10 +293,25 @@ gst_svtp_src_create (GstPushSrc * pushsrc, GstBuffer ** buffer)
     return GST_FLOW_WRONG_STATE;
   }
 
-  if (self->buf_len == 0) {
+  if (G_UNLIKELY (self->buf_len < 0)) {
     GST_INFO_OBJECT (self, "no data (EOS)");
     g_mutex_unlock (self->lock);
     return GST_FLOW_UNEXPECTED;
+  }
+
+  while (self->buf_len == 0) {
+    GST_LOG_OBJECT (self, "waiting for data");
+    g_cond_wait (self->not_empty, self->lock);
+    if (self->unlocked) {
+      GST_INFO_OBJECT (self, "wrong state (unlocked)");
+      g_mutex_unlock (self->lock);
+      return GST_FLOW_WRONG_STATE;
+    }
+    if (G_UNLIKELY (self->buf_len < 0)) {
+      GST_INFO_OBJECT (self, "no data (EOS)");
+      g_mutex_unlock (self->lock);
+      return GST_FLOW_UNEXPECTED;
+    }
   }
 
   buf = gst_buffer_try_new_and_alloc (self->buf_len);
@@ -319,7 +332,7 @@ gst_svtp_src_create (GstPushSrc * pushsrc, GstBuffer ** buffer)
 
   *buffer = buf;
 
-  return GST_FLOW_OK; */
+  return GST_FLOW_OK;
 }
 
 static gboolean
@@ -333,13 +346,15 @@ gst_svtp_src_query (GstBaseSrc * basesrc, GstQuery * query)
 
   switch (GST_QUERY_TYPE (query)) {
     case GST_QUERY_DURATION:
+      GST_INFO_OBJECT (self, "query duration (%i)", self->duration);
       if (self->duration > 0) {
         GstFormat format;
-        gdouble duration;
 
         gst_query_parse_duration (query, &format, NULL);
+        GST_DEBUG_OBJECT (self, "query format %i", format);
         if (format == GST_FORMAT_TIME) {
-          gst_query_set_duration (query, format, duration * GST_SECOND);
+          gst_query_set_duration (query, format, self->duration * GST_SECOND);
+          GST_DEBUG_OBJECT (self, "query duration returns TRUE");
           ret = TRUE;
         }
       }
@@ -451,7 +466,6 @@ gst_svtp_src_loop (GstSvtpSrc * self)
   GTimeVal wait_time;
 
   jni_res = (*svtp_vm)->AttachCurrentThread (svtp_vm, &env, NULL);
-  GST_DEBUG_OBJECT (self, "AttachCurrentThread %i %p", jni_res, env);
   if (jni_res != 0) {
     goto cleanup;
   }
@@ -464,13 +478,18 @@ gst_svtp_src_loop (GstSvtpSrc * self)
   }
   seek_id = (*env)->GetMethodID (env, svtp_rtsp_class, "seek", "(IJ)V");
   get_id = (*env)->GetMethodID (env, svtp_rtsp_class, "getData",
-      "(ILjava/nio/ByteBuffer;I)I");
+      "(ILjava/nio/ByteBuffer;)I");
   buf_obj = (*env)->NewDirectByteBuffer (env, self->buf, BUF_SIZE);
 
   while (self->started) {
+    gboolean wait;
+
+    wait = FALSE;
+
     g_mutex_lock (self->lock);
 
     if (G_UNLIKELY (self->seek_pos != GST_CLOCK_TIME_NONE)) {
+      GST_INFO_OBJECT (self, "handling seek");
       (*env)->CallVoidMethod (env, rtsp, seek_id, self->id, self->seek_pos);
       self->seek_pos = GST_CLOCK_TIME_NONE;
       self->buf_len = 0;
@@ -478,20 +497,30 @@ gst_svtp_src_loop (GstSvtpSrc * self)
       g_cond_signal (self->seek_handled);
     }
 
-    if (G_LIKELY (self->buf_len == 0)) {
+    if (G_LIKELY (self->buf_len <= 0)) {
       GST_LOG_OBJECT (self, "getting bytes");
       self->buf_len = (*env)->CallIntMethod (env, rtsp, get_id, self->id,
           buf_obj, BUF_SIZE);
       GST_LOG_OBJECT (self, "got %i bytes", self->buf_len);
       if (G_LIKELY (self->buf_len > 0)) {
+        GST_LOG_OBJECT (self, "signal that we got %i bytes", self->buf_len);
         g_cond_signal (self->not_empty);
+        wait = TRUE;
       } else if (self->buf_len < 0) {
-        self->buf_len = 0;
         GST_LOG_OBJECT (self, "signalling eos");
         g_cond_signal (self->not_empty);
+
+        g_mutex_unlock (self->lock);
+
+        goto cleanup;
+      } else {
+        GST_WARNING_OBJECT (self, "no data");
       }
     } else {
-      GST_DEBUG_OBJECT (self, "waiting for data to be consumed");
+      wait = TRUE;
+    }
+    if (wait) {
+      GST_LOG_OBJECT (self, "waiting for data to be consumed");
       g_get_current_time (&wait_time);
       g_time_val_add (&wait_time, 500 * 1000); // 500 ms
       g_cond_timed_wait (self->not_full, self->lock, &wait_time);
@@ -499,7 +528,6 @@ gst_svtp_src_loop (GstSvtpSrc * self)
 
     g_mutex_unlock (self->lock);
   }
-   //(*env)->CallVoidMethod (env, rtsp, test_id, self->id);
 
 cleanup:
   jni_res = (*svtp_vm)->DetachCurrentThread (svtp_vm);
