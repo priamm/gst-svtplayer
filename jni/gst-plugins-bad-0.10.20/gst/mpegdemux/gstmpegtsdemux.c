@@ -2839,7 +2839,7 @@ gst_mpegts_demux_src_pad_query (GstPad * pad, GstQuery * query)
             }
             gst_query_unref (bquery);
           }
-        } else {
+        } else if (!res) {
           GST_WARNING_OBJECT (demux, "unsupported query format or no bitrate "
               "yet to approximate duration from bytes");
         }
