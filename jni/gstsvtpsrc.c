@@ -346,26 +346,22 @@ gst_svtp_src_query (GstBaseSrc * basesrc, GstQuery * query)
 
   switch (GST_QUERY_TYPE (query)) {
     case GST_QUERY_DURATION:
-      GST_INFO_OBJECT (self, "query duration (%i)", self->duration);
       if (self->duration > 0) {
         GstFormat format;
 
         gst_query_parse_duration (query, &format, NULL);
-        GST_DEBUG_OBJECT (self, "query format %i", format);
         if (format == GST_FORMAT_TIME) {
           gst_query_set_duration (query, format, self->duration * GST_SECOND);
-          GST_DEBUG_OBJECT (self, "query duration returns TRUE");
           ret = TRUE;
         }
       }
       break;
-    default:
+    case GST_QUERY_POSITION:
       ret = FALSE;
       break;
-  }
-
-  if (!ret) {
-    ret = GST_BASE_SRC_CLASS (parent_class)->query (basesrc, query);
+    default:
+      ret = GST_BASE_SRC_CLASS (parent_class)->query (basesrc, query);
+      break;
   }
 
   return ret;
