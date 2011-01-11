@@ -35,8 +35,9 @@ void svtp_gst_log (GstDebugCategory * category, GstDebugLevel level,
   } else {
     name = "";
   }
-  msg = g_strdup_printf ("[%s] %s %s", gst_debug_category_get_name (category),
-      name, gst_debug_message_get (message));
+  msg = g_strdup_printf ("[%s] %s [%s:%i] %s",
+      gst_debug_category_get_name (category),
+      name, function, line, gst_debug_message_get (message));
   switch (level) {
   case GST_LEVEL_ERROR:
     LOGE (msg);
